@@ -23,20 +23,8 @@ class FirebaseManager {
     }()
     #endif
     
-    // WICHTIG: Diese Werte sind NUR Fallback-Werte wenn Firebase Remote Config nicht verfügbar ist
-    // In Production sollten ALLE Werte über Firebase Remote Config gesteuert werden
-    // Ändern Sie diese Werte NICHT - ändern Sie stattdessen die Werte in Firebase Console
-    private let defaultAdConfig: [String: Any] = [
-        "ads_enabled": true,
-        "banner_ad_unit_id": "ca-app-pub-3840959679571598/6293918284",
-        "banner_enabled": true,
-        "interstitial_ad_unit_id": "ca-app-pub-3840959679571598/3090645228",
-        "interstitial_enabled": true,
-        "interstitial_frequency": 3, // WICHTIG: Wird von Firebase Remote Config überschrieben - ändern Sie diesen Wert NICHT hier!
-        "interstitial_min_interval": 60,
-        "rewarded_ad_unit_id": "ca-app-pub-3840959679571598/3667754945",
-        "rewarded_enabled": true
-    ]
+    // WICHTIG: Alle Ad Unit IDs werden AUSSCHLIESSLICH von Firebase Remote Config geladen
+    // Keine hardcodierten Werte in der App - alles wird über Firebase Console gesteuert
     
     private var isConfigured = false
     
@@ -72,20 +60,9 @@ class FirebaseManager {
         // Für Development: settings.minimumFetchInterval = 0
         remoteConfig.configSettings = settings
         
-        // WICHTIG: Diese Default-Werte werden NUR verwendet wenn Firebase Remote Config nicht verfügbar ist
-        // In Production werden ALLE Werte von Firebase Remote Config überschrieben
-        // Ändern Sie diese Werte NICHT - ändern Sie stattdessen die Werte in Firebase Console
-        remoteConfig.setDefaults([
-            "ads_enabled": true as NSNumber,
-            "banner_ad_unit_id": "ca-app-pub-3840959679571598/6293918284" as NSString,
-            "banner_enabled": true as NSNumber,
-            "interstitial_ad_unit_id": "ca-app-pub-3840959679571598/3090645228" as NSString,
-            "interstitial_enabled": true as NSNumber,
-            "interstitial_frequency": 3 as NSNumber, // WICHTIG: Wird von Firebase Remote Config überschrieben - ändern Sie diesen Wert NICHT hier!
-            "interstitial_min_interval": 60 as NSNumber,
-            "rewarded_ad_unit_id": "ca-app-pub-3840959679571598/3667754945" as NSString,
-            "rewarded_enabled": true as NSNumber
-        ])
+        // WICHTIG: Keine Default-Werte - alle Ad Unit IDs müssen in Firebase Remote Config konfiguriert sein
+        // Wenn Firebase Remote Config nicht verfügbar ist, werden keine Ads geladen
+        remoteConfig.setDefaults([:])
         
         // Lade Remote Config beim Start
         fetchRemoteConfig()
@@ -133,28 +110,35 @@ class FirebaseManager {
         #if canImport(FirebaseRemoteConfig)
         // Prüfe ob Firebase konfiguriert ist
         guard isConfigured else {
-            return defaultAdConfig[key] as? String ?? ""
+            print("⚠️ Firebase Remote Config nicht konfiguriert - kann \(key) nicht laden")
+            return ""
         }
         let configValue = remoteConfig.configValue(forKey: key)
         let stringValue = configValue.stringValue
-        // Prüfe ob Wert nicht leer ist (leerer String bedeutet Default-Wert)
+        // WICHTIG: Nur Werte von Firebase Remote Config verwenden - keine Fallbacks
         if !stringValue.isEmpty {
             return stringValue
+        } else {
+            print("⚠️ Firebase Remote Config: \(key) ist leer oder nicht konfiguriert")
+            return ""
         }
+        #else
+        print("⚠️ Firebase Remote Config nicht verfügbar - kann \(key) nicht laden")
+        return ""
         #endif
-        // Fallback zu Default-Werten
-        return defaultAdConfig[key] as? String ?? ""
     }
     
     func getBool(key: String) -> Bool {
         #if canImport(FirebaseRemoteConfig)
         // Prüfe ob Firebase konfiguriert ist
         guard isConfigured else {
-            return defaultAdConfig[key] as? Bool ?? false
+            print("⚠️ Firebase Remote Config nicht konfiguriert - kann \(key) nicht laden")
+            return false
         }
         return remoteConfig.configValue(forKey: key).boolValue
         #else
-        return defaultAdConfig[key] as? Bool ?? false
+        print("⚠️ Firebase Remote Config nicht verfügbar - kann \(key) nicht laden")
+        return false
         #endif
     }
     
@@ -162,15 +146,16 @@ class FirebaseManager {
         #if canImport(FirebaseRemoteConfig)
         // Prüfe ob Firebase konfiguriert ist
         guard isConfigured else {
-            return defaultAdConfig[key] as? Int ?? 0
+            print("⚠️ Firebase Remote Config nicht konfiguriert - kann \(key) nicht laden")
+            return 0
         }
         let configValue = remoteConfig.configValue(forKey: key)
         let numberValue = configValue.numberValue
-        // Verwende Remote Config Wert (auch wenn 0, da Defaults bereits gesetzt sind)
+        // WICHTIG: Nur Werte von Firebase Remote Config verwenden
         return numberValue.intValue
         #else
-        // Fallback zu Default-Werten
-        return defaultAdConfig[key] as? Int ?? 0
+        print("⚠️ Firebase Remote Config nicht verfügbar - kann \(key) nicht laden")
+        return 0
         #endif
     }
     
@@ -178,15 +163,16 @@ class FirebaseManager {
         #if canImport(FirebaseRemoteConfig)
         // Prüfe ob Firebase konfiguriert ist
         guard isConfigured else {
-            return defaultAdConfig[key] as? Double ?? 0.0
+            print("⚠️ Firebase Remote Config nicht konfiguriert - kann \(key) nicht laden")
+            return 0.0
         }
         let configValue = remoteConfig.configValue(forKey: key)
         let numberValue = configValue.numberValue
-        // Verwende Remote Config Wert (auch wenn 0, da Defaults bereits gesetzt sind)
+        // WICHTIG: Nur Werte von Firebase Remote Config verwenden
         return numberValue.doubleValue
         #else
-        // Fallback zu Default-Werten
-        return defaultAdConfig[key] as? Double ?? 0.0
+        print("⚠️ Firebase Remote Config nicht verfügbar - kann \(key) nicht laden")
+        return 0.0
         #endif
     }
     

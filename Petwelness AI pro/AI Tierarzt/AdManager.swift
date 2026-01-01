@@ -110,38 +110,56 @@ class AdManager: NSObject, ObservableObject {
         #endif
     }
     
-    // Ad Unit IDs - Werden von Firebase Remote Config geladen (oder Test-IDs im Simulator)
+    // Ad Unit IDs - Werden AUSSCHLIESSLICH von Firebase Remote Config geladen (oder Test-IDs im Simulator)
     private var bannerAdUnitID: String {
-        // Im Simulator: Verwende Test-IDs
+        // Im Simulator: Verwende Test-IDs (von Google bereitgestellt)
         if isSimulator {
             return testBannerAdUnitID
         }
+        // WICHTIG: Nur Firebase Remote Config verwenden - keine hardcodierten Werte
         guard isAdMobInitialized else {
-            return "ca-app-pub-3840959679571598/6293918284" // Default
+            print("⚠️ AdMob nicht initialisiert - kann Banner Ad Unit ID nicht laden")
+            return ""
         }
-        return FirebaseManager.shared.getString(key: "banner_ad_unit_id")
+        let unitID = FirebaseManager.shared.getString(key: "banner_ad_unit_id")
+        if unitID.isEmpty {
+            print("❌ Banner Ad Unit ID ist leer - bitte in Firebase Remote Config konfigurieren")
+        }
+        return unitID
     }
     
     private var interstitialAdUnitID: String {
-        // Im Simulator: Verwende Test-IDs
+        // Im Simulator: Verwende Test-IDs (von Google bereitgestellt)
         if isSimulator {
             return testInterstitialAdUnitID
         }
+        // WICHTIG: Nur Firebase Remote Config verwenden - keine hardcodierten Werte
         guard isAdMobInitialized else {
-            return "ca-app-pub-3840959679571598/3090645228" // Default
+            print("⚠️ AdMob nicht initialisiert - kann Interstitial Ad Unit ID nicht laden")
+            return ""
         }
-        return FirebaseManager.shared.getString(key: "interstitial_ad_unit_id")
+        let unitID = FirebaseManager.shared.getString(key: "interstitial_ad_unit_id")
+        if unitID.isEmpty {
+            print("❌ Interstitial Ad Unit ID ist leer - bitte in Firebase Remote Config konfigurieren")
+        }
+        return unitID
     }
     
     private var rewardedAdUnitID: String {
-        // Im Simulator: Verwende Test-IDs
+        // Im Simulator: Verwende Test-IDs (von Google bereitgestellt)
         if isSimulator {
             return testRewardedAdUnitID
         }
+        // WICHTIG: Nur Firebase Remote Config verwenden - keine hardcodierten Werte
         guard isAdMobInitialized else {
-            return "ca-app-pub-3840959679571598/3667754945" // Default
+            print("⚠️ AdMob nicht initialisiert - kann Rewarded Ad Unit ID nicht laden")
+            return ""
         }
-        return FirebaseManager.shared.getString(key: "rewarded_ad_unit_id")
+        let unitID = FirebaseManager.shared.getString(key: "rewarded_ad_unit_id")
+        if unitID.isEmpty {
+            print("❌ Rewarded Ad Unit ID ist leer - bitte in Firebase Remote Config konfigurieren")
+        }
+        return unitID
     }
     
     // Ad Settings - Werden von Firebase Remote Config geladen
@@ -529,6 +547,17 @@ class AdManager: NSObject, ObservableObject {
         }
         #endif
         
+        // WICHTIG: Prüfe ob Ad Unit ID von Firebase geladen wurde
+        guard !bannerAdUnitID.isEmpty else {
+            print("❌ Banner Ad: Ad Unit ID ist leer - bitte in Firebase Remote Config konfigurieren")
+            #if canImport(GoogleMobileAds)
+            let banner = BannerView(adSize: AdSizeBanner)
+            #else
+            let banner = BannerView(adSize: AdSizeBanner.banner)
+            #endif
+            return banner
+        }
+        
         print("✅ Banner Ad: Wird geladen mit Unit ID: \(bannerAdUnitID)")
         
         #if canImport(GoogleMobileAds)
@@ -594,6 +623,12 @@ class AdManager: NSObject, ObservableObject {
         print("   - adsEnabledRemote: \(adsEnabledRemote)")
         print("   - interstitialEnabled: \(interstitialEnabled)")
         print("   - consentManager.canShowAds(): \(consentManager.canShowAds())")
+        
+        // WICHTIG: Prüfe ob Ad Unit ID von Firebase geladen wurde
+        guard !interstitialAdUnitID.isEmpty else {
+            print("❌ Interstitial Ad: Ad Unit ID ist leer - bitte in Firebase Remote Config konfigurieren")
+            return
+        }
         
         // WICHTIG: Timing-Prüfung wird NICHT beim Laden gemacht, sondern nur beim Anzeigen!
         // Ads sollten immer geladen werden können, damit sie bereit sind wenn sie gebraucht werden.
@@ -872,6 +907,12 @@ class AdManager: NSObject, ObservableObject {
         print("   - isSimulator: \(isSimulator)")
         print("   - adsEnabled: \(adsEnabled)")
         print("   - adsEnabledRemote: \(adsEnabledRemote)")
+        
+        // WICHTIG: Prüfe ob Ad Unit ID von Firebase geladen wurde
+        guard !rewardedAdUnitID.isEmpty else {
+            print("❌ Rewarded Ad: Ad Unit ID ist leer - bitte in Firebase Remote Config konfigurieren")
+            return
+        }
         
         let request = Request()
         RewardedAd.load(with: rewardedAdUnitID, request: request) { [weak self] ad, error in

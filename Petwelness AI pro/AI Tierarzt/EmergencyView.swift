@@ -18,6 +18,46 @@ struct EmergencyView: View {
         horizontalSizeClass == .regular && verticalSizeClass == .regular
     }
     
+    // Notfallnummer basierend auf Land - lokal gespeichert
+    private var emergencyPhoneNumber: String {
+        let countryCode = Locale.current.regionCode ?? "DE" // Default: Deutschland
+        
+        // Länder-spezifische Notfallnummern (lokal)
+        let phoneNumbers: [String: String] = [
+            "DE": "116117",  // Deutschland
+            "AT": "116117",  // Österreich
+            "CH": "116117",  // Schweiz
+            "US": "911",     // USA
+            "GB": "111",     // Großbritannien
+            "FR": "3115",    // Frankreich
+            "IT": "118",     // Italien
+            "ES": "112",     // Spanien
+            "NL": "0900-0245", // Niederlande
+            "BE": "0900-16161", // Belgien
+            "PL": "112",     // Polen
+            "DK": "1812",    // Dänemark
+            "SE": "112",     // Schweden
+            "NO": "113",     // Norwegen
+            "FI": "112"      // Finnland
+        ]
+        
+        return phoneNumbers[countryCode] ?? phoneNumbers["DE"] ?? "116117"
+    }
+    
+    // Formatierte Telefonnummer für Anzeige (mit Leerzeichen)
+    private var formattedPhoneNumber: String {
+        let cleaned = emergencyPhoneNumber.replacingOccurrences(of: " ", with: "")
+        // Formatiere: 116117 -> 116 117, 3115 -> 31 15, etc.
+        if cleaned.count == 6 {
+            let index = cleaned.index(cleaned.startIndex, offsetBy: 3)
+            return String(cleaned[..<index]) + " " + String(cleaned[index...])
+        } else if cleaned.count == 4 {
+            let index = cleaned.index(cleaned.startIndex, offsetBy: 2)
+            return String(cleaned[..<index]) + " " + String(cleaned[index...])
+        }
+        return emergencyPhoneNumber
+    }
+    
     var body: some View {
         NavigationView {
             ZStack {
@@ -60,8 +100,11 @@ struct EmergencyView: View {
                         
                         // Tierärztlicher Notdienst Button (Rot)
                         Button(action: {
-                            if let url = URL(string: "tel://116117") {
+                            let phoneNumber = emergencyPhoneNumber.replacingOccurrences(of: " ", with: "")
+                            if !phoneNumber.isEmpty, let url = URL(string: "tel://\(phoneNumber)") {
                                 UIApplication.shared.open(url)
+                            } else {
+                                print("⚠️ Notfallnummer nicht verfügbar für Land: \(Locale.current.regionCode ?? "unbekannt")")
                             }
                         }) {
                             HStack(spacing: Spacing.md) {
@@ -69,9 +112,15 @@ struct EmergencyView: View {
                                     .font(.system(size: 20))
                                     .foregroundColor(.white)
                                 
-                                Text("emergency.veterinaryEmergency".localized + ": 116 117")
-                                    .font(.system(size: 17, weight: .semibold))
-                                    .foregroundColor(.white)
+                                if !emergencyPhoneNumber.isEmpty {
+                                    Text("emergency.veterinaryEmergency".localized + ": \(formattedPhoneNumber)")
+                                        .font(.system(size: 17, weight: .semibold))
+                                        .foregroundColor(.white)
+                                } else {
+                                    Text("emergency.veterinaryEmergency".localized)
+                                        .font(.system(size: 17, weight: .semibold))
+                                        .foregroundColor(.white)
+                                }
                             }
                             .frame(maxWidth: .infinity)
                             .padding(Spacing.lg)

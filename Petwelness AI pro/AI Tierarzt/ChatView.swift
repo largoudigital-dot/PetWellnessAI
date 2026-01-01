@@ -326,16 +326,16 @@ struct ChatView: View {
         let disclaimerText = "chat.disclaimer".localized
         let components = disclaimerText.components(separatedBy: ":")
         
-        return VStack(spacing: Spacing.xs) {
+        return VStack(spacing: 2) {
             if let firstPart = components.first {
-                // IMPORTANT Text mit Icon - groß und fett
-                HStack(spacing: Spacing.xs) {
+                // IMPORTANT Text mit Icon - kleiner
+                HStack(spacing: 4) {
                     Image(systemName: "exclamationmark.triangle.fill")
-                        .font(.system(size: 14))
+                        .font(.system(size: 10))
                         .foregroundColor(.accentOrange)
                     
                     Text(firstPart)
-                        .font(.system(size: 14, weight: .bold))
+                        .font(.system(size: 10, weight: .semibold))
                         .foregroundColor(.textPrimary)
                         .textCase(.uppercase)
                 }
@@ -343,28 +343,28 @@ struct ChatView: View {
                 // Rest des Textes
                 if components.count > 1 {
                     Text(components.dropFirst().joined(separator: ":").trimmingCharacters(in: .whitespaces))
-                        .font(.system(size: 12, weight: .regular))
-                        .foregroundColor(.textPrimary.opacity(0.9))
+                        .font(.system(size: 9, weight: .regular))
+                        .foregroundColor(.textPrimary.opacity(0.85))
                         .multilineTextAlignment(.center)
-                        .lineSpacing(2)
+                        .lineSpacing(1)
                 }
             } else {
                 Text(disclaimerText)
-                    .font(.system(size: 12, weight: .medium))
+                    .font(.system(size: 9, weight: .medium))
                     .foregroundColor(.textPrimary)
                     .multilineTextAlignment(.center)
             }
         }
         .frame(maxWidth: .infinity)
-        .padding(.horizontal, Spacing.md)
-        .padding(.vertical, Spacing.sm)
-        .background(Color.accentOrange.opacity(0.1))
+        .padding(.horizontal, Spacing.sm)
+        .padding(.vertical, 6)
+        .background(Color.accentOrange.opacity(0.08))
         .overlay(
-            RoundedRectangle(cornerRadius: 8)
-                .stroke(Color.accentOrange.opacity(0.4), lineWidth: 1)
+            RoundedRectangle(cornerRadius: 6)
+                .stroke(Color.accentOrange.opacity(0.3), lineWidth: 0.5)
         )
-        .padding(.horizontal, Spacing.md)
-        .padding(.vertical, Spacing.xs)
+        .padding(.horizontal, Spacing.sm)
+        .padding(.vertical, 4)
     }
     
     private var welcomeMessage: some View {
