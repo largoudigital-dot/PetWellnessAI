@@ -50,7 +50,8 @@ struct PetProfileView: View {
     @State private var selectedImage: UIImage?
     
     var body: some View {
-        let pet = currentPet // Verwende aktuelles Pet
+        // Verwende currentPet für alle Pet-Daten (wird automatisch aktualisiert wenn petManager.pets sich ändert)
+        let pet = currentPet
         
         return NavigationView {
             ZStack {
@@ -232,10 +233,10 @@ struct PetProfileView: View {
                 // Zeige Interstitial Ad nach Aktion
                 AdManager.shared.showInterstitialAfterAction()
                 
-                // Warte kurz, damit die View aktualisiert wird, dann reset
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                    selectedImage = nil
-                }
+                // WICHTIG: Setze selectedImage sofort auf nil, damit die View das gespeicherte Profilbild anzeigt
+                // Die View wird automatisch aktualisiert, weil petManager.pets (@Published) sich geändert hat
+                // und currentPet wird neu berechnet, was das neue Profilbild enthält
+                selectedImage = nil
             }
             .alert("petProfile.deletePet".localized, isPresented: $showDeleteConfirmation) {
                 Button("common.cancel".localized, role: .cancel) { }
@@ -275,21 +276,15 @@ struct PetProfileView: View {
                                     .fill(Color.white.opacity(0.2))
                                     .frame(width: 70, height: 70)
                                 
-                                // Zeige selectedImage, wenn vorhanden (neues Foto), sonst Profilbild oder Emoji
-                                if let image = selectedImage {
-                                    Image(uiImage: image)
-                                        .resizable()
-                                        .scaledToFill()
-                                        .frame(width: 70, height: 70)
-                                        .clipShape(Circle())
-                                } else if let imageData = pet.profileImageData, let uiImage = UIImage(data: imageData) {
+                                // Zeige Profilbild oder Emoji (verwende currentPet für aktuelle Daten)
+                                if let imageData = currentPet.profileImageData, let uiImage = UIImage(data: imageData) {
                                     Image(uiImage: uiImage)
                                         .resizable()
                                         .scaledToFill()
                                         .frame(width: 70, height: 70)
                                         .clipShape(Circle())
                                 } else {
-                                    Text(pet.emoji)
+                                    Text(currentPet.emoji)
                                         .font(.system(size: 40))
                                 }
                             }
@@ -468,7 +463,7 @@ struct PetProfileView: View {
                 }
                 
                 // Banner Ad nach Medicamentos
-                if AdManager.shared.shouldShowAds {
+                if AdManager.shared.shouldShowBannerAds {
                     BannerAdView()
                         .frame(height: 50)
                         .padding(.vertical, Spacing.sm)
@@ -495,7 +490,7 @@ struct PetProfileView: View {
                 }
                 
                 // Banner Ad nach Consultas
-                if AdManager.shared.shouldShowAds {
+                if AdManager.shared.shouldShowBannerAds {
                     BannerAdView()
                         .frame(height: 50)
                         .padding(.vertical, Spacing.sm)
@@ -534,7 +529,7 @@ struct PetProfileView: View {
                 }
                 
                 // Banner Ad nach Citas
-                if AdManager.shared.shouldShowAds {
+                if AdManager.shared.shouldShowBannerAds {
                     BannerAdView()
                         .frame(height: 50)
                         .padding(.vertical, Spacing.sm)

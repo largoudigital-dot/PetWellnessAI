@@ -219,7 +219,7 @@ struct ChatView: View {
                 .background(Color.backgroundSecondary)
                 
                 // Banner Ad über Navigation Bar (nur wenn Tastatur NICHT sichtbar ist)
-                if !isKeyboardVisible && AdManager.shared.shouldShowAds {
+                if !isKeyboardVisible && AdManager.shared.shouldShowBannerAds {
                     BannerAdView()
                         .frame(height: 50)
                         .background(Color.backgroundPrimary)
@@ -278,17 +278,12 @@ struct ChatView: View {
         }
         .onChange(of: selectedImage) { newImage in
             if let image = newImage {
-                let imageMessage = ChatMessage(
-                    text: "📷 Foto hochgeladen",
-                    isUser: true,
-                    image: image
-                )
-                withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
-                    messages.append(imageMessage)
-                }
-                
+                // WICHTIG: sendMessage fügt die Nachricht bereits zu messages hinzu
+                // Deshalb hier NICHT nochmal hinzufügen, sonst erscheint die Nachricht doppelt
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                    sendMessage(text: "Ich habe ein Foto hochgeladen. Bitte analysieren Sie es und geben Sie mir eine Einschätzung.", image: image)
+                    // Verwende lokalisierte Nachricht
+                    let message = "chat.photoUploaded".localized
+                    sendMessage(text: message, image: image)
                 }
             }
         }
@@ -440,11 +435,8 @@ struct ChatView: View {
     }
     
     private func sendInitialMessage(_ text: String) {
-        let userMessage = ChatMessage(text: text, isUser: true)
-        messages.append(userMessage)
-        saveChatHistory()
-        
-        // Verwende sendMessage für konsistente API-Integration
+        // WICHTIG: sendMessage fügt die Nachricht bereits zu messages hinzu
+        // Deshalb hier NICHT nochmal hinzufügen, sonst erscheint die Nachricht doppelt
         let imageToSend = appState.chatPhoto ?? photoImage
         sendMessage(text: text, image: imageToSend)
     }
@@ -476,9 +468,14 @@ struct ChatView: View {
         Task {
             do {
                 // Konvertiere Bild zu Data, falls vorhanden
+                // WICHTIG: Claude API hat ein Maximum von 5 MB für Bilder
                 var imageData: Data? = nil
                 if let image = image ?? selectedImage {
-                    imageData = image.jpegData(compressionQuality: 0.8)
+                    imageData = compressImage(image, maxSizeMB: 5)
+                    if let imageData = imageData {
+                        let sizeMB = Double(imageData.count) / 1024.0 / 1024.0
+                        print("📸 Bild komprimiert: \(String(format: "%.2f", sizeMB)) MB")
+                    }
                 }
                 
                 // Hole aktuelle Sprache
@@ -561,6 +558,78 @@ struct ChatView: View {
     
     private func hideKeyboard() {
         UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+    }
+    
+    // MARK: - Image Compression
+    /// Komprimiert ein Bild, bis es unter der maximalen Größe ist (für Claude API: 5 MB)
+    private func compressImage(_ image: UIImage, maxSizeMB: Double) -> Data? {
+        let maxSizeBytes = Int(maxSizeMB * 1024 * 1024) // Konvertiere MB zu Bytes
+        var compressionQuality: CGFloat = 0.8
+        var imageData = image.jpegData(compressionQuality: compressionQuality)
+        
+        // Wenn Bild bereits klein genug ist, verwende es direkt
+        if let data = imageData, data.count <= maxSizeBytes {
+            return data
+        }
+        
+        // Reduziere Bildgröße schrittweise
+        var currentSize = image.size
+        let maxDimension: CGFloat = 2048 // Maximale Dimension für Claude API
+        
+        // Wenn Bild zu groß ist, verkleinere es zuerst
+        if currentSize.width > maxDimension || currentSize.height > maxDimension {
+            let scale = min(maxDimension / currentSize.width, maxDimension / currentSize.height)
+            let newSize = CGSize(width: currentSize.width * scale, height: currentSize.height * scale)
+            
+            UIGraphicsBeginImageContextWithOptions(newSize, false, 1.0)
+            image.draw(in: CGRect(origin: .zero, size: newSize))
+            if let resizedImage = UIGraphicsGetImageFromCurrentImageContext() {
+                UIGraphicsEndImageContext()
+                imageData = resizedImage.jpegData(compressionQuality: compressionQuality)
+            } else {
+                UIGraphicsEndImageContext()
+            }
+        }
+        
+        // Wenn Bild immer noch zu groß ist, reduziere Komprimierungsqualität
+        if let data = imageData, data.count > maxSizeBytes {
+            compressionQuality = 0.5
+            imageData = image.jpegData(compressionQuality: compressionQuality)
+            
+            // Wenn immer noch zu groß, reduziere weiter
+            if let data = imageData, data.count > maxSizeBytes {
+                compressionQuality = 0.3
+                imageData = image.jpegData(compressionQuality: compressionQuality)
+                
+                // Letzter Versuch mit sehr niedriger Qualität
+                if let data = imageData, data.count > maxSizeBytes {
+                    compressionQuality = 0.1
+                    imageData = image.jpegData(compressionQuality: compressionQuality)
+                }
+            }
+        }
+        
+        // Prüfe finale Größe
+        if let data = imageData {
+            if data.count > maxSizeBytes {
+                print("⚠️ Bild konnte nicht unter \(maxSizeMB) MB komprimiert werden. Aktuelle Größe: \(Double(data.count) / 1024.0 / 1024.0) MB")
+                // Versuche nochmal mit kleinerer Dimension
+                let smallerDimension: CGFloat = 1024
+                let scale = min(smallerDimension / image.size.width, smallerDimension / image.size.height)
+                let newSize = CGSize(width: image.size.width * scale, height: image.size.height * scale)
+                
+                UIGraphicsBeginImageContextWithOptions(newSize, false, 0.5)
+                image.draw(in: CGRect(origin: .zero, size: newSize))
+                if let resizedImage = UIGraphicsGetImageFromCurrentImageContext() {
+                    UIGraphicsEndImageContext()
+                    imageData = resizedImage.jpegData(compressionQuality: 0.5)
+                } else {
+                    UIGraphicsEndImageContext()
+                }
+            }
+        }
+        
+        return imageData
     }
 }
 

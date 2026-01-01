@@ -96,27 +96,9 @@ import GoogleMobileAds
 class AdManager: NSObject, ObservableObject {
     static let shared = AdManager()
     
-    // Test-Ad Unit IDs für Simulator (von Google bereitgestellt)
-    private let testBannerAdUnitID = "ca-app-pub-3940256099942544/2934735716"
-    private let testInterstitialAdUnitID = "ca-app-pub-3940256099942544/4411468910"
-    private let testRewardedAdUnitID = "ca-app-pub-3940256099942544/1712485313"
-    
-    // Prüfe ob im Simulator
-    private var isSimulator: Bool {
-        #if targetEnvironment(simulator)
-        return true
-        #else
-        return false
-        #endif
-    }
-    
-    // Ad Unit IDs - Werden AUSSCHLIESSLICH von Firebase Remote Config geladen (oder Test-IDs im Simulator)
+    // Ad Unit IDs - Werden AUSSCHLIESSLICH von Firebase Remote Config geladen (auch im Simulator)
     private var bannerAdUnitID: String {
-        // Im Simulator: Verwende Test-IDs (von Google bereitgestellt)
-        if isSimulator {
-            return testBannerAdUnitID
-        }
-        // WICHTIG: Nur Firebase Remote Config verwenden - keine hardcodierten Werte
+        // WICHTIG: Nur Firebase Remote Config verwenden - keine hardcodierten Werte (auch nicht für Simulator)
         guard isAdMobInitialized else {
             print("⚠️ AdMob nicht initialisiert - kann Banner Ad Unit ID nicht laden")
             return ""
@@ -129,11 +111,7 @@ class AdManager: NSObject, ObservableObject {
     }
     
     private var interstitialAdUnitID: String {
-        // Im Simulator: Verwende Test-IDs (von Google bereitgestellt)
-        if isSimulator {
-            return testInterstitialAdUnitID
-        }
-        // WICHTIG: Nur Firebase Remote Config verwenden - keine hardcodierten Werte
+        // WICHTIG: Nur Firebase Remote Config verwenden - keine hardcodierten Werte (auch nicht für Simulator)
         guard isAdMobInitialized else {
             print("⚠️ AdMob nicht initialisiert - kann Interstitial Ad Unit ID nicht laden")
             return ""
@@ -146,11 +124,7 @@ class AdManager: NSObject, ObservableObject {
     }
     
     private var rewardedAdUnitID: String {
-        // Im Simulator: Verwende Test-IDs (von Google bereitgestellt)
-        if isSimulator {
-            return testRewardedAdUnitID
-        }
-        // WICHTIG: Nur Firebase Remote Config verwenden - keine hardcodierten Werte
+        // WICHTIG: Nur Firebase Remote Config verwenden - keine hardcodierten Werte (auch nicht für Simulator)
         guard isAdMobInitialized else {
             print("⚠️ AdMob nicht initialisiert - kann Rewarded Ad Unit ID nicht laden")
             return ""
@@ -170,14 +144,14 @@ class AdManager: NSObject, ObservableObject {
         return FirebaseManager.shared.getBool(key: "ads_enabled")
     }
     
-    private var bannerEnabled: Bool {
+    var bannerEnabled: Bool {
         guard isAdMobInitialized else {
             return true // Default: enabled
         }
         return FirebaseManager.shared.getBool(key: "banner_enabled")
     }
     
-    private var interstitialEnabled: Bool {
+    var interstitialEnabled: Bool {
         guard isAdMobInitialized else {
             print("⚠️ interstitialEnabled: AdMob nicht initialisiert, verwende Default: true")
             return true // Default: enabled
@@ -187,7 +161,7 @@ class AdManager: NSObject, ObservableObject {
         return value
     }
     
-    private var rewardedEnabled: Bool {
+    var rewardedEnabled: Bool {
         guard isAdMobInitialized else {
             print("⚠️ rewardedEnabled: AdMob nicht initialisiert, verwende Default: true")
             return true // Default: enabled
@@ -219,6 +193,36 @@ class AdManager: NSObject, ObservableObject {
         let value = FirebaseManager.shared.getInt(key: "interstitial_min_interval")
         print("🔍 minInterstitialInterval von Firebase: \(value) Sekunden")
         return TimeInterval(value)
+    }
+    
+    // WICHTIG: Rewarded Ad Frequenz wird AUSSCHLIESSLICH über Firebase Remote Config gesteuert
+    // Keine Hardcoded-Werte - alles wird von Firebase gelesen
+    private var rewardedAdFrequency: Int {
+        guard isAdMobInitialized else {
+            print("⚠️ rewardedAdFrequency: AdMob nicht initialisiert, verwende Default: 5")
+            return 5 // Default: Alle 5 Nachrichten
+        }
+        let value = FirebaseManager.shared.getInt(key: "rewarded_ad_frequency")
+        print("🔍 rewardedAdFrequency von Firebase: \(value) Nachrichten")
+        return value > 0 ? value : 5 // Fallback: 5 wenn Wert <= 0
+    }
+    
+    // Erste Nachrichten-Nummern, bei denen Rewarded Ads gezeigt werden sollen
+    // Format in Firebase: Komma-getrennte Liste, z.B. "3,4,5"
+    private var rewardedAdFirstShows: [Int] {
+        guard isAdMobInitialized else {
+            print("⚠️ rewardedAdFirstShows: AdMob nicht initialisiert, verwende Default: [3,4,5]")
+            return [3, 4, 5] // Default
+        }
+        let value = FirebaseManager.shared.getString(key: "rewarded_ad_first_shows")
+        if value.isEmpty {
+            print("⚠️ rewardedAdFirstShows: Leer in Firebase, verwende Default: [3,4,5]")
+            return [3, 4, 5] // Default
+        }
+        // Parse Komma-getrennte Liste: "3,4,5" -> [3, 4, 5]
+        let shows = value.split(separator: ",").compactMap { Int($0.trimmingCharacters(in: .whitespaces)) }
+        print("🔍 rewardedAdFirstShows von Firebase: \(shows)")
+        return shows.isEmpty ? [3, 4, 5] : shows // Fallback wenn Parsing fehlschlägt
     }
     
     // Ad Instances
@@ -269,6 +273,29 @@ class AdManager: NSObject, ObservableObject {
         // WICHTIG: Prüfe Firebase Remote Config - auch im Simulator!
         // Wenn ads_enabled in Firebase auf false gesetzt ist, sollen KEINE Ads angezeigt werden
         return adsEnabled && adsEnabledRemote
+    }
+    
+    // Spezifische Property für Banner Ads - prüft auch banner_enabled
+    var shouldShowBannerAds: Bool {
+        guard shouldShowAds else {
+            return false
+        }
+        guard isAdMobInitialized else {
+            return adsEnabled
+        }
+        return bannerEnabled
+    }
+    
+    // Spezifische Property für Interstitial Ads - prüft auch interstitial_enabled
+    var shouldShowInterstitialAds: Bool {
+        guard shouldShowAds else {
+            return false
+        }
+        guard isAdMobInitialized else {
+            return adsEnabled
+        }
+        // WICHTIG: Prüfe auch interstitial_enabled von Firebase
+        return adsEnabled && adsEnabledRemote && interstitialEnabled
     }
     
     // Consent Manager
@@ -368,20 +395,43 @@ class AdManager: NSObject, ObservableObject {
         print("⚠️ Test-Banner wird angezeigt. Füge Framework hinzu für echte Ads.")
         #endif
         
-        // WICHTIG: Lade Ads SOFORT nach Initialisierung (ohne Verzögerung)
-        // Ads sollen beim App-Start bereit sein
+        // WICHTIG: Lade ALLE Ads SOFORT nach Initialisierung (ohne Verzögerung)
+        // Banner, Interstitial und Rewarded Ads sollen beim App-Start bereit sein
         // WICHTIG: Ads werden nur geladen wenn ads_enabled in Firebase true ist
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             print("🔄 Prüfe Firebase-Einstellungen vor Ad-Loading...")
             print("   - adsEnabledRemote: \(self.adsEnabledRemote)")
+            print("   - bannerEnabled: \(self.bannerEnabled)")
             print("   - interstitialEnabled: \(self.interstitialEnabled)")
             print("   - rewardedEnabled: \(self.rewardedEnabled)")
             
             if self.adsEnabledRemote {
-                print("🔄 Lade Interstitial & Rewarded Ads direkt nach AdMob-Initialisierung...")
-                self.loadInterstitialAd()
-                self.loadRewardedAd()
-                print("✅ Interstitial & Rewarded Ads werden beim App-Start geladen")
+                print("🔄 Lade ALLE Ads (Banner, Interstitial, Rewarded) direkt nach AdMob-Initialisierung...")
+                
+                // Banner Ad vorbereiten (wird automatisch geladen wenn BannerAdView erstellt wird)
+                if self.bannerEnabled {
+                    print("✅ Banner Ad wird vorbereitet (wird automatisch geladen wenn BannerAdView erstellt wird)")
+                    // Banner werden lazy geladen wenn BannerAdViewRepresentable erstellt wird
+                    // Das ist korrekt, da Banner nur geladen werden müssen wenn sie angezeigt werden
+                }
+                
+                // Interstitial Ad laden
+                if self.interstitialEnabled {
+                    print("🔄 Lade Interstitial Ad beim App-Start...")
+                    self.loadInterstitialAd()
+                } else {
+                    print("⚠️ Interstitial Ad ist deaktiviert (interstitial_enabled = false)")
+                }
+                
+                // Rewarded Ad laden
+                if self.rewardedEnabled {
+                    print("🔄 Lade Rewarded Ad beim App-Start...")
+                    self.loadRewardedAd()
+                } else {
+                    print("⚠️ Rewarded Ad ist deaktiviert (rewarded_enabled = false)")
+                }
+                
+                print("✅ Alle aktivierten Ads werden beim App-Start geladen")
             } else {
                 print("❌ ads_enabled in Firebase ist false - KEINE Ads werden geladen")
             }
@@ -435,6 +485,9 @@ class AdManager: NSObject, ObservableObject {
         print("   - Interstitial Enabled: \(interstitialEnabled)")
         print("   - Interstitial Frequency: \(interstitialFrequency)")
         print("   - Min Interval: \(minInterstitialInterval)s")
+        print("   - Rewarded Enabled: \(rewardedEnabled)")
+        print("   - Rewarded Ad Frequency: \(rewardedAdFrequency)")
+        print("   - Rewarded Ad First Shows: \(rewardedAdFirstShows)")
     }
     
     // MARK: - App Tracking Transparency (ATT)
@@ -506,7 +559,6 @@ class AdManager: NSObject, ObservableObject {
         print("   - bannerEnabled: \(bannerEnabled)")
         print("   - consentManager.canShowAds(): \(consentManager.canShowAds())")
         print("   - consentStatus: \(consentManager.consentStatus)")
-        print("   - isSimulator: \(isSimulator)")
         print("   - bannerAdUnitID: \(bannerAdUnitID)")
         
         // WICHTIG: Prüfe Firebase Remote Config ZUERST
@@ -618,7 +670,6 @@ class AdManager: NSObject, ObservableObject {
         
         print("🔍 Interstitial Ad Debug:")
         print("   - interstitialAdUnitID: \(interstitialAdUnitID)")
-        print("   - isSimulator: \(isSimulator)")
         print("   - adsEnabled: \(adsEnabled)")
         print("   - adsEnabledRemote: \(adsEnabledRemote)")
         print("   - interstitialEnabled: \(interstitialEnabled)")
@@ -904,7 +955,6 @@ class AdManager: NSObject, ObservableObject {
         
         print("🔍 Rewarded Ad Debug:")
         print("   - rewardedAdUnitID: \(rewardedAdUnitID)")
-        print("   - isSimulator: \(isSimulator)")
         print("   - adsEnabled: \(adsEnabled)")
         print("   - adsEnabledRemote: \(adsEnabledRemote)")
         
@@ -1012,43 +1062,67 @@ class AdManager: NSObject, ObservableObject {
         return true
     }
     
-    // Für Chat-Nachrichten: Zeige Rewarded Ad bei 3., 4., 5. Nachricht, dann alle 5 Nachrichten
+    // WICHTIG: Rewarded Ad Frequenz wird AUSSCHLIESSLICH über Firebase Remote Config gesteuert
     // KEIN Interstitial nach Chat-Nachrichten - nur nach Aktionen (Eingaben/Speichern)
     func incrementChatMessageCount() {
         chatMessageCount += 1
         print("📊 Chat-Nachrichten: \(chatMessageCount)")
+        print("🔍 Rewarded Ad Config:")
+        print("   - rewardedAdFrequency: \(rewardedAdFrequency)")
+        print("   - rewardedAdFirstShows: \(rewardedAdFirstShows)")
         
-        // Bei Nachricht 3, 4, 5: Zeige Rewarded Ad
-        if chatMessageCount == 3 || chatMessageCount == 4 || chatMessageCount == 5 {
-            print("🎁 Chat-Nachricht \(chatMessageCount) erreicht - Zeige Rewarded Ad")
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                self.showRewardedAd { success in
-                    if success {
-                        print("✅ Rewarded Ad erfolgreich angesehen - Belohnung erhalten")
-                    } else {
-                        print("⚠️ Rewarded Ad nicht verfügbar")
-                        // KEIN Fallback zu Interstitial - nur Rewarded Ad
-                    }
-                }
-            }
-        } else if chatMessageCount > 5 && chatMessageCount % 5 == 0 {
-            // Nach der 5. Nachricht: Alle 5 Nachrichten ein Rewarded Ad (10, 15, 20, 25, etc.)
-            print("🎁 Chat-Nachricht \(chatMessageCount) erreicht (alle 5 Nachrichten) - Zeige Rewarded Ad")
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                self.showRewardedAd { success in
-                    if success {
-                        print("✅ Rewarded Ad erfolgreich angesehen - Belohnung erhalten")
-                    } else {
-                        print("⚠️ Rewarded Ad nicht verfügbar")
-                        // KEIN Fallback zu Interstitial - nur Rewarded Ad
-                    }
-                }
-            }
-        } else {
-            // Bei anderen Chat-Nachrichten: KEIN Ad
-            // Interstitial erscheint NUR nach Aktionen (Medikament, Termin, Impfung, Symptom-Eingabe)
-            print("💬 Chat-Nachricht \(chatMessageCount): Kein Ad (Rewarded bei 3,4,5 und dann alle 5)")
+        // Prüfe ob Rewarded Ads aktiviert sind
+        guard rewardedEnabled else {
+            print("⚠️ Rewarded Ads sind deaktiviert (rewarded_enabled = false)")
+            return
         }
+        
+        // Prüfe ob Rewarded Ad bereit ist
+        guard isRewardedReady else {
+            print("⚠️ Rewarded Ad nicht bereit - lade Ad...")
+            loadRewardedAd()
+            return
+        }
+        
+        // Prüfe ob aktuelle Nachricht in der Liste der ersten Shows ist
+        if rewardedAdFirstShows.contains(chatMessageCount) {
+            print("🎁 Chat-Nachricht \(chatMessageCount) erreicht (erste Shows: \(rewardedAdFirstShows)) - Zeige Rewarded Ad")
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                self.showRewardedAd { success in
+                    if success {
+                        print("✅ Rewarded Ad erfolgreich angesehen - Belohnung erhalten")
+                    } else {
+                        print("⚠️ Rewarded Ad nicht verfügbar")
+                        // KEIN Fallback zu Interstitial - nur Rewarded Ad
+                    }
+                }
+            }
+            return
+        }
+        
+        // Prüfe ob aktuelle Nachricht nach den ersten Shows liegt und Frequenz erreicht ist
+        if let maxFirstShow = rewardedAdFirstShows.max(), chatMessageCount > maxFirstShow {
+            // Berechne ob aktuelle Nachricht ein Vielfaches der Frequenz ist
+            let frequency = rewardedAdFrequency > 0 ? rewardedAdFrequency : 5 // Fallback
+            if chatMessageCount % frequency == 0 {
+                print("🎁 Chat-Nachricht \(chatMessageCount) erreicht (alle \(frequency) Nachrichten) - Zeige Rewarded Ad")
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                    self.showRewardedAd { success in
+                        if success {
+                            print("✅ Rewarded Ad erfolgreich angesehen - Belohnung erhalten")
+                        } else {
+                            print("⚠️ Rewarded Ad nicht verfügbar")
+                            // KEIN Fallback zu Interstitial - nur Rewarded Ad
+                        }
+                    }
+                }
+                return
+            }
+        }
+        
+        // Bei anderen Chat-Nachrichten: KEIN Ad
+        // Interstitial erscheint NUR nach Aktionen (Medikament, Termin, Impfung, Symptom-Eingabe)
+        print("💬 Chat-Nachricht \(chatMessageCount): Kein Rewarded Ad")
     }
     
     // Helper: Zeige Interstitial nach wichtiger Aktion (Medikament, Termin, Impfung, Symptom-Eingabe)
@@ -1240,73 +1314,79 @@ struct BannerAdView: View {
     @State private var showDebugInfo = false
     
     var body: some View {
-        #if !canImport(GoogleMobileAds)
-        // Test-Banner wenn Framework nicht verfügbar
-        ZStack {
-            Rectangle()
-                .fill(
-                    LinearGradient(
-                        colors: [Color.orange.opacity(0.8), Color.red.opacity(0.8)],
-                        startPoint: .leading,
-                        endPoint: .trailing
+        // WICHTIG: Prüfe ob Banner Ads angezeigt werden sollen (inkl. banner_enabled von Firebase)
+        if !adManager.shouldShowBannerAds {
+            // Kein Banner wenn banner_enabled in Firebase false ist
+            EmptyView()
+        } else {
+            #if !canImport(GoogleMobileAds)
+            // Test-Banner wenn Framework nicht verfügbar
+            ZStack {
+                Rectangle()
+                    .fill(
+                        LinearGradient(
+                            colors: [Color.orange.opacity(0.8), Color.red.opacity(0.8)],
+                            startPoint: .leading,
+                            endPoint: .trailing
+                        )
                     )
-                )
-            
-            HStack {
-                Image(systemName: "exclamationmark.triangle.fill")
-                    .foregroundColor(.white)
-                Text("TEST AD - GoogleMobileAds Framework fehlt")
-                    .font(.system(size: 12, weight: .semibold))
-                    .foregroundColor(.white)
-                Spacer()
+                
+                HStack {
+                    Image(systemName: "exclamationmark.triangle.fill")
+                        .foregroundColor(.white)
+                    Text("TEST AD - GoogleMobileAds Framework fehlt")
+                        .font(.system(size: 12, weight: .semibold))
+                        .foregroundColor(.white)
+                    Spacer()
+                }
+                .padding(.horizontal, 12)
             }
-            .padding(.horizontal, 12)
-        }
-        .frame(height: 50)
-        .onTapGesture {
-            print("ℹ️ Test-Banner geklickt - Füge GoogleMobileAds Framework hinzu für echte Ads")
-            showDebugInfo.toggle()
-        }
-        .onAppear {
-            print("🔍 BannerAdView: Test-Banner angezeigt (GoogleMobileAds nicht verfügbar)")
-            print("   - shouldShowAds: \(adManager.shouldShowAds)")
-            print("   - adsEnabled: \(adManager.adsEnabled)")
-        }
-        #else
-        Group {
-            BannerAdViewRepresentable()
-                .onAppear {
-                    print("🔍 BannerAdView: Echte Ad wird geladen")
-                    print("   - shouldShowAds: \(adManager.shouldShowAds)")
-                    print("   - adsEnabled: \(adManager.adsEnabled)")
-                    print("   - isAdMobInitialized: \(adManager.isAdMobInitialized)")
+            .frame(height: 50)
+            .onTapGesture {
+                print("ℹ️ Test-Banner geklickt - Füge GoogleMobileAds Framework hinzu für echte Ads")
+                showDebugInfo.toggle()
+            }
+            .onAppear {
+                print("🔍 BannerAdView: Test-Banner angezeigt (GoogleMobileAds nicht verfügbar)")
+                print("   - shouldShowBannerAds: \(adManager.shouldShowBannerAds)")
+                print("   - bannerEnabled: \(adManager.bannerEnabled)")
+            }
+            #else
+            Group {
+                BannerAdViewRepresentable()
+                    .onAppear {
+                        print("🔍 BannerAdView: Echte Ad wird geladen")
+                        print("   - shouldShowBannerAds: \(adManager.shouldShowBannerAds)")
+                        print("   - bannerEnabled: \(adManager.bannerEnabled)")
+                        print("   - isAdMobInitialized: \(adManager.isAdMobInitialized)")
+                    }
+                
+                // Debug-Overlay im Simulator
+                #if targetEnvironment(simulator)
+                if showDebugInfo {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("DEBUG INFO")
+                            .font(.caption2)
+                            .bold()
+                        Text("shouldShowBannerAds: \(adManager.shouldShowBannerAds ? "YES" : "NO")")
+                            .font(.caption2)
+                        Text("bannerEnabled: \(adManager.bannerEnabled ? "YES" : "NO")")
+                            .font(.caption2)
+                    }
+                    .padding(8)
+                    .background(Color.black.opacity(0.7))
+                    .foregroundColor(.white)
+                    .cornerRadius(4)
+                    .padding(.top, 4)
                 }
-            
-            // Debug-Overlay im Simulator
-            #if targetEnvironment(simulator)
-            if showDebugInfo {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("DEBUG INFO")
-                        .font(.caption2)
-                        .bold()
-                    Text("shouldShowAds: \(adManager.shouldShowAds ? "YES" : "NO")")
-                        .font(.caption2)
-                    Text("adsEnabled: \(adManager.adsEnabled ? "YES" : "NO")")
-                        .font(.caption2)
-                }
-                .padding(8)
-                .background(Color.black.opacity(0.7))
-                .foregroundColor(.white)
-                .cornerRadius(4)
-                .padding(.top, 4)
+                #endif
+            }
+            .onTapGesture(count: 3) {
+                // Triple-tap für Debug-Info
+                showDebugInfo.toggle()
             }
             #endif
         }
-        .onTapGesture(count: 3) {
-            // Triple-tap für Debug-Info
-            showDebugInfo.toggle()
-        }
-        #endif
     }
 }
 

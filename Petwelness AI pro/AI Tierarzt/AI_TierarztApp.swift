@@ -40,21 +40,42 @@ struct AI_TierarztApp: App {
             AdManager.shared.initializeAdMob()
             
             // Ads werden jetzt direkt in initializeAdMob() geladen
-            // Zusätzlich: Prüfe nach 3 Sekunden ob Ads geladen wurden
+            // Zusätzlich: Prüfe nach 3 Sekunden ob ALLE Ads geladen wurden
             DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+                print("🔍 Prüfe Ad-Status nach 3 Sekunden...")
+                
+                // Prüfe Banner Ad (wird automatisch geladen wenn BannerAdView erstellt wird)
+                if AdManager.shared.bannerEnabled {
+                    print("✅ Banner Ad ist aktiviert (wird geladen wenn BannerAdView erstellt wird)")
+                } else {
+                    print("⚠️ Banner Ad ist deaktiviert (banner_enabled = false)")
+                }
+                
+                // Prüfe Interstitial Ad
                 if AdManager.shared.isInterstitialReady {
                     print("✅ Interstitial Ad ist beim App-Start bereit!")
                 } else {
                     print("⚠️ Interstitial Ad noch nicht bereit - versuche erneut zu laden...")
-                    AdManager.shared.loadInterstitialAd()
+                    if AdManager.shared.interstitialEnabled {
+                        AdManager.shared.loadInterstitialAd()
+                    } else {
+                        print("⚠️ Interstitial Ad ist deaktiviert (interstitial_enabled = false)")
+                    }
                 }
                 
+                // Prüfe Rewarded Ad
                 if AdManager.shared.isRewardedReady {
                     print("✅ Rewarded Ad ist beim App-Start bereit!")
                 } else {
                     print("⚠️ Rewarded Ad noch nicht bereit - versuche erneut zu laden...")
-                    AdManager.shared.loadRewardedAd()
+                    if AdManager.shared.rewardedEnabled {
+                        AdManager.shared.loadRewardedAd()
+                    } else {
+                        print("⚠️ Rewarded Ad ist deaktiviert (rewarded_enabled = false)")
+                    }
                 }
+                
+                print("✅ Ad-Loading-Check abgeschlossen")
             }
         }
     }

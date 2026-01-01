@@ -98,7 +98,7 @@ struct EmergencyView: View {
                         .padding(.horizontal, Spacing.xl)
                         .padding(.top, Spacing.lg)
                         
-                        // Tierärztlicher Notdienst Button (Rot)
+                        // Emergency Service Button (Rot) - MIT Telefonnummer
                         Button(action: {
                             let phoneNumber = emergencyPhoneNumber.replacingOccurrences(of: " ", with: "")
                             if !phoneNumber.isEmpty, let url = URL(string: "tel://\(phoneNumber)") {
@@ -195,7 +195,7 @@ struct EmergencyView: View {
             }
             .safeAreaInset(edge: .bottom) {
                 // Banner Ad am unteren Rand (über Safe Area)
-                if AdManager.shared.shouldShowAds {
+                if AdManager.shared.shouldShowBannerAds {
                     BannerAdView()
                         .frame(height: 50)
                         .background(Color.backgroundPrimary)

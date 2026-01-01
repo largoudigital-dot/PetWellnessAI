@@ -34,3 +34,6 @@ Pods/
 
 # Archives
 *.xcarchive
+
+# API Keys - NIEMALS committen!
+**/ClaudeAPIService.swift

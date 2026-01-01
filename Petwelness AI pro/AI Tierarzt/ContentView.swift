@@ -53,7 +53,7 @@ struct ContentView: View {
                     Spacer()
                     
                     // Banner Ad (wenn aktiviert)
-                    if AdManager.shared.shouldShowAds {
+                    if AdManager.shared.shouldShowBannerAds {
                         BannerAdView()
                             .frame(height: 50)
                             .background(Color.backgroundPrimary)

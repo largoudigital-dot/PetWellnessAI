@@ -82,7 +82,7 @@ struct MedicationsView: View {
             }
             .safeAreaInset(edge: .bottom) {
                 // Banner Ad am unteren Rand (über Safe Area)
-                if AdManager.shared.shouldShowAds {
+                if AdManager.shared.shouldShowBannerAds {
                     BannerAdView()
                         .frame(height: 50)
                         .background(Color.backgroundPrimary)
@@ -289,7 +289,20 @@ struct AddMedicationView: View {
             "medications.frequency.asNeeded".localized
         ]
     }
-    private let dosageChips = ["1/4 Tab", "1/2 Tab", "1 Tab", "2 Tab", "2.5ml", "5ml", "10ml", "2 Tropfen", "5 Tropfen", "1 Kapsel"]
+    private var dosageChips: [String] {
+        [
+            "medications.dosage.quarterTab".localized,
+            "medications.dosage.halfTab".localized,
+            "medications.dosage.oneTab".localized,
+            "medications.dosage.twoTab".localized,
+            "medications.dosage.twoPointFiveMl".localized,
+            "medications.dosage.fiveMl".localized,
+            "medications.dosage.tenMl".localized,
+            "medications.dosage.twoDrops".localized,
+            "medications.dosage.fiveDrops".localized,
+            "medications.dosage.oneCapsule".localized
+        ]
+    }
     
     // Anzahl der benötigten Uhrzeiten basierend auf Häufigkeit
     private var numberOfTimes: Int {
@@ -756,7 +769,20 @@ struct EditMedicationView: View {
             "medications.frequency.asNeeded".localized
         ]
     }
-    private let dosageChips = ["1/4 Tab", "1/2 Tab", "1 Tab", "2 Tab", "2.5ml", "5ml", "10ml", "2 Tropfen", "5 Tropfen", "1 Kapsel"]
+    private var dosageChips: [String] {
+        [
+            "medications.dosage.quarterTab".localized,
+            "medications.dosage.halfTab".localized,
+            "medications.dosage.oneTab".localized,
+            "medications.dosage.twoTab".localized,
+            "medications.dosage.twoPointFiveMl".localized,
+            "medications.dosage.fiveMl".localized,
+            "medications.dosage.tenMl".localized,
+            "medications.dosage.twoDrops".localized,
+            "medications.dosage.fiveDrops".localized,
+            "medications.dosage.oneCapsule".localized
+        ]
+    }
     
     // Anzahl der benötigten Uhrzeiten basierend auf Häufigkeit
     private var numberOfTimes: Int {

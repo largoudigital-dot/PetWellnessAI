@@ -97,7 +97,7 @@ struct GamificationView: View {
             }
             .safeAreaInset(edge: .bottom) {
                 // Banner Ad am unteren Rand (über Safe Area)
-                if AdManager.shared.shouldShowAds {
+                if AdManager.shared.shouldShowBannerAds {
                     BannerAdView()
                         .frame(height: 50)
                         .background(Color.backgroundPrimary)
