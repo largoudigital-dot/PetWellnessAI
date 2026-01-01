@@ -11,280 +11,211 @@ struct EmergencyDetailView: View {
     let emergency: Emergency
     let categoryName: String
     @State private var showContactAlert = false
+    @Environment(\.dismiss) var dismiss
+    @State private var screenHeight: CGFloat = UIScreen.main.bounds.height
     
     var body: some View {
-        ZStack {
-            Color.backgroundPrimary
-                .ignoresSafeArea()
-            
-            ScrollView {
-                VStack(alignment: .leading, spacing: Spacing.xl) {
-                    // Bild Header
-                    if let imageName = emergency.imageName {
-                        ZStack(alignment: .bottomLeading) {
-                            Image(imageName)
-                                .resizable()
-                                .scaledToFill()
-                                .frame(height: 250)
-                                .clipped()
-                                .overlay(
-                                    LinearGradient(
-                                        colors: [Color.clear, Color.black.opacity(0.5)],
-                                        startPoint: .top,
-                                        endPoint: .bottom
-                                    )
-                                )
+        GeometryReader { geometry in
+            ZStack {
+                Color.backgroundPrimary
+                    .ignoresSafeArea()
+                
+                VStack(spacing: 0) {
+                    // Custom Header mit X-Button rechts - oben fixiert
+                    headerView
+                        .padding(.top, 8) // Padding für Status Bar
+                    
+                    ScrollView {
+                        VStack(alignment: .leading, spacing: Spacing.lg) {
+                            // Bild oben - 25% der Bildschirmhöhe
+                            if let imageName = emergency.imageName {
+                                Image(imageName)
+                                    .resizable()
+                                    .scaledToFill()
+                                    .frame(height: geometry.size.height * 0.25)
+                                    .clipped()
+                                    .padding(.horizontal, Spacing.xl)
+                                    .padding(.top, Spacing.md)
+                            }
+                            
+                            // Warning Banner (Rot mit weißem Text)
+                            if let warning = emergency.localizedWarning {
+                            HStack(spacing: Spacing.md) {
+                                Image(systemName: "exclamationmark.triangle.fill")
+                                    .font(.system(size: 20))
+                                    .foregroundColor(.white)
+                                
+                                Text(warning)
+                                    .font(.system(size: 15, weight: .semibold))
+                                    .foregroundColor(.white)
+                                    .multilineTextAlignment(.leading)
+                            }
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding(Spacing.lg)
+                            .background(Color.accentRed)
+                            .cornerRadius(CornerRadius.medium)
+                            .padding(.horizontal, Spacing.xl)
+                            .padding(.top, Spacing.md)
+                        }
+                    
+                        // Symptome Card
+                        VStack(alignment: .leading, spacing: Spacing.md) {
+                            HStack(spacing: Spacing.sm) {
+                                Image(systemName: "list.bullet.clipboard.fill")
+                                    .font(.system(size: 20))
+                                    .foregroundColor(.brandPrimary)
+                                
+                                Text("emergency.symptoms".localized)
+                                    .font(.system(size: 18, weight: .bold))
+                                    .foregroundColor(.textPrimary)
+                            }
                             
                             VStack(alignment: .leading, spacing: Spacing.sm) {
-                                HStack {
-                                    Image(systemName: emergency.severity == .critical ? "exclamationmark.triangle.fill" : "info.circle.fill")
-                                        .font(.system(size: 24))
-                                        .foregroundColor(.white)
-                                    
-                                    Spacer()
-                                    
-                                    Text(emergency.severity.localizedName)
-                                        .font(.bodyTextBold)
-                                        .foregroundColor(.white)
-                                        .padding(.horizontal, Spacing.md)
-                                        .padding(.vertical, Spacing.sm)
-                                        .background(emergency.severity.color.opacity(0.9))
-                                        .cornerRadius(CornerRadius.medium)
-                                }
-                                
-                                Text(emergency.localizedTitle)
-                                    .font(.appSubtitle)
-                                    .foregroundColor(.white)
-                                    .shadow(color: Color.black.opacity(0.3), radius: 2, x: 0, y: 1)
-                                
-                                Text(categoryName)
-                                    .font(.bodyText)
-                                    .foregroundColor(.white.opacity(0.9))
-                                    .shadow(color: Color.black.opacity(0.3), radius: 2, x: 0, y: 1)
-                            }
-                            .padding(Spacing.lg)
-                        }
-                        .cornerRadius(CornerRadius.large)
-                        .shadow(color: Color.black.opacity(0.2), radius: 10, x: 0, y: 5)
-                    } else {
-                        // Fallback Header ohne Bild
-                        VStack(alignment: .leading, spacing: Spacing.md) {
-                            HStack {
-                                Image(systemName: emergency.severity == .critical ? "exclamationmark.triangle.fill" : "info.circle.fill")
-                                    .font(.system(size: 30))
-                                    .foregroundColor(emergency.severity.color)
-                                
-                                Spacer()
-                                
-                                Text(emergency.severity.localizedName)
-                                    .font(.bodyTextBold)
-                                    .foregroundColor(emergency.severity.color)
-                                    .padding(.horizontal, Spacing.md)
-                                    .padding(.vertical, Spacing.sm)
-                                    .background(emergency.severity.backgroundColor)
-                                    .cornerRadius(CornerRadius.medium)
-                            }
-                            
-                            Text(emergency.localizedTitle)
-                                .font(.appSubtitle)
-                                .foregroundColor(.textPrimary)
-                            
-                            Text(categoryName)
-                                .font(.bodyText)
-                                .foregroundColor(.textSecondary)
-                        }
-                        .padding(Spacing.lg)
-                        .background(emergency.severity.backgroundColor)
-                        .cornerRadius(CornerRadius.large)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: CornerRadius.large)
-                                .stroke(emergency.severity.color.opacity(0.3), lineWidth: 2)
-                        )
-                    }
-                    
-                    // Warning
-                    if let warning = emergency.localizedWarning {
-                        HStack(spacing: Spacing.md) {
-                            Image(systemName: "exclamationmark.triangle.fill")
-                                .font(.system(size: 20))
-                                .foregroundColor(.accentRed)
-                            
-                            Text(warning)
-                                .font(.bodyTextBold)
-                                .foregroundColor(.accentRed)
-                        }
-                        .padding(Spacing.lg)
-                        .background(Color.accentRed.opacity(0.1))
-                        .cornerRadius(CornerRadius.large)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: CornerRadius.large)
-                                .stroke(Color.accentRed.opacity(0.3), lineWidth: 2)
-                        )
-                    }
-                    
-                    // Symptome
-                    VStack(alignment: .leading, spacing: Spacing.md) {
-                        HStack(spacing: Spacing.sm) {
-                            Image(systemName: "list.bullet.clipboard.fill")
-                                .font(.system(size: 20))
-                                .foregroundColor(.brandPrimary)
-                            
-                            Text("emergency.symptoms".localized)
-                                .font(.sectionTitle)
-                                .foregroundColor(.textPrimary)
-                        }
-                        
-                        VStack(spacing: Spacing.sm) {
-                            ForEach(emergency.localizedSymptoms, id: \.self) { symptom in
-                                HStack(alignment: .top, spacing: Spacing.md) {
-                                    Image(systemName: "checkmark.circle.fill")
-                                        .font(.system(size: 16))
-                                        .foregroundColor(.brandPrimary)
-                                        .padding(.top, 2)
-                                    
-                                    Text(symptom)
-                                        .font(.bodyText)
-                                        .foregroundColor(.textPrimary)
-                                        .fixedSize(horizontal: false, vertical: true)
-                                    
-                                    Spacer(minLength: 0)
-                                }
-                                .padding(.vertical, Spacing.xs)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                            }
-                        }
-                    }
-                    .padding(Spacing.lg)
-                    .background(
-                        RoundedRectangle(cornerRadius: CornerRadius.large)
-                            .fill(
-                                LinearGradient(
-                                    colors: [Color.backgroundSecondary, Color.backgroundSecondary.opacity(0.8)],
-                                    startPoint: .topLeading,
-                                    endPoint: .bottomTrailing
-                                )
-                            )
-                    )
-                    .overlay(
-                        RoundedRectangle(cornerRadius: CornerRadius.large)
-                            .stroke(Color.brandPrimary.opacity(0.1), lineWidth: 1)
-                    )
-                    .shadow(color: Color.black.opacity(0.05), radius: 5, x: 0, y: 2)
-                    
-                    // Erste-Hilfe-Schritte
-                    VStack(alignment: .leading, spacing: Spacing.md) {
-                        HStack(spacing: Spacing.sm) {
-                            Image(systemName: "cross.case.fill")
-                                .font(.system(size: 20))
-                                .foregroundColor(.accentRed)
-                            
-                            Text("emergency.firstAidSteps".localized)
-                                .font(.sectionTitle)
-                                .foregroundColor(.textPrimary)
-                        }
-                        
-                        VStack(spacing: Spacing.sm) {
-                            ForEach(Array(emergency.localizedSteps.enumerated()), id: \.offset) { index, step in
-                                HStack(alignment: .top, spacing: Spacing.md) {
-                                    // Step Number Badge
-                                    ZStack {
-                                        Circle()
-                                            .fill(
-                                                LinearGradient(
-                                                    colors: [Color.brandPrimary, Color.brandPrimary.opacity(0.8)],
-                                                    startPoint: .topLeading,
-                                                    endPoint: .bottomTrailing
-                                                )
-                                            )
-                                            .frame(width: 32, height: 32)
-                                            .shadow(color: Color.brandPrimary.opacity(0.3), radius: 4, x: 0, y: 2)
+                                ForEach(emergency.localizedSymptoms, id: \.self) { symptom in
+                                    HStack(alignment: .top, spacing: Spacing.md) {
+                                        Image(systemName: "checkmark.circle.fill")
+                                            .font(.system(size: 18))
+                                            .foregroundColor(.brandPrimary)
                                         
-                                        Text("\(index + 1)")
-                                            .font(.system(size: 14, weight: .bold))
-                                            .foregroundColor(.white)
+                                        Text(symptom)
+                                            .font(.system(size: 16))
+                                            .foregroundColor(.textPrimary)
+                                            .fixedSize(horizontal: false, vertical: true)
+                                        
+                                        Spacer(minLength: 0)
                                     }
-                                    .frame(width: 32)
-                                    
-                                    // Step Text
-                                    Text(step)
-                                        .font(.bodyText)
-                                        .foregroundColor(.textPrimary)
-                                        .fixedSize(horizontal: false, vertical: true)
-                                        .multilineTextAlignment(.leading)
-                                    
-                                    Spacer(minLength: 0)
+                                    .padding(.vertical, Spacing.xs)
                                 }
-                                .padding(Spacing.md)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                                .background(
-                                    RoundedRectangle(cornerRadius: CornerRadius.medium)
-                                        .fill(index % 2 == 0 
-                                            ? Color.backgroundSecondary.opacity(0.5)
-                                            : Color.clear)
-                                )
                             }
                         }
-                    }
-                    .padding(Spacing.lg)
-                    .background(
-                        RoundedRectangle(cornerRadius: CornerRadius.large)
-                            .fill(
-                                LinearGradient(
-                                    colors: [Color.backgroundSecondary, Color.backgroundSecondary.opacity(0.8)],
-                                    startPoint: .topLeading,
-                                    endPoint: .bottomTrailing
-                                )
-                            )
-                    )
-                    .overlay(
-                        RoundedRectangle(cornerRadius: CornerRadius.large)
-                            .stroke(Color.accentRed.opacity(0.1), lineWidth: 1)
-                    )
-                    .shadow(color: Color.black.opacity(0.05), radius: 5, x: 0, y: 2)
-                    
-                    // Notfall-Kontakt Button
-                    Button(action: {
-                        showContactAlert = true
-                    }) {
-                        HStack(spacing: Spacing.md) {
-                            Image(systemName: "phone.fill")
-                                .font(.system(size: 20))
-                                .foregroundColor(.white)
-                            
-                            Text("emergency.contactVet".localized)
-                                .font(.bodyTextBold)
-                                .foregroundColor(.white)
-                        }
-                        .frame(maxWidth: .infinity)
                         .padding(Spacing.lg)
-                        .background(
-                            LinearGradient(
-                                colors: [Color.accentRed, Color.accentRed.opacity(0.8)],
-                                startPoint: .leading,
-                                endPoint: .trailing
-                            )
-                        )
+                        .background(Color.backgroundSecondary)
                         .cornerRadius(CornerRadius.large)
-                        .shadow(color: Color.accentRed.opacity(0.3), radius: 8, x: 0, y: 4)
+                        .padding(.horizontal, Spacing.xl)
+                        
+                        // Erste-Hilfe-Schritte Card
+                        VStack(alignment: .leading, spacing: Spacing.md) {
+                            HStack(spacing: Spacing.sm) {
+                                Image(systemName: "cross.case.fill")
+                                    .font(.system(size: 20))
+                                    .foregroundColor(.accentRed)
+                                
+                                Text("emergency.firstAidSteps".localized)
+                                    .font(.system(size: 18, weight: .bold))
+                                    .foregroundColor(.textPrimary)
+                            }
+                            
+                            VStack(alignment: .leading, spacing: Spacing.md) {
+                                ForEach(Array(emergency.localizedSteps.enumerated()), id: \.offset) { index, step in
+                                    HStack(alignment: .top, spacing: Spacing.md) {
+                                        // Step Number Badge - Grüner Kreis
+                                        ZStack {
+                                            Circle()
+                                                .fill(Color.brandPrimary)
+                                                .frame(width: 28, height: 28)
+                                            
+                                            Text("\(index + 1)")
+                                                .font(.system(size: 14, weight: .bold))
+                                                .foregroundColor(.white)
+                                        }
+                                        .frame(width: 28)
+                                        
+                                        // Step Text
+                                        Text(step)
+                                            .font(.system(size: 16))
+                                            .foregroundColor(.textPrimary)
+                                            .fixedSize(horizontal: false, vertical: true)
+                                        
+                                        Spacer(minLength: 0)
+                                    }
+                                }
+                            }
+                        }
+                        .padding(Spacing.lg)
+                        .background(Color.backgroundSecondary)
+                        .cornerRadius(CornerRadius.large)
+                        .padding(.horizontal, Spacing.xl)
+                    
+                        // Notfall-Kontakt Button
+                        Button(action: {
+                            showContactAlert = true
+                        }) {
+                            HStack(spacing: Spacing.md) {
+                                Image(systemName: "phone.fill")
+                                    .font(.system(size: 20))
+                                    .foregroundColor(.white)
+                                
+                                Text("emergency.contactVet".localized)
+                                    .font(.system(size: 17, weight: .semibold))
+                                    .foregroundColor(.white)
+                            }
+                            .frame(maxWidth: .infinity)
+                            .padding(Spacing.lg)
+                            .background(Color.accentRed)
+                            .cornerRadius(CornerRadius.large)
+                        }
+                        .buttonStyle(PlainButtonStyle())
+                        .padding(.horizontal, Spacing.xl)
+                        .padding(.top, Spacing.lg)
+                        .padding(.bottom, Spacing.xl)
+                        }
                     }
-                    .buttonStyle(PlainButtonStyle())
-                    .padding(.top, Spacing.md)
-                }
-                .padding(Spacing.xl)
-            }
-        }
-        .navigationTitle(emergency.localizedTitle)
-        .navigationBarTitleDisplayMode(.inline)
-        .alert("emergency.contactAlert.title".localized, isPresented: $showContactAlert) {
-            Button("common.cancel".localized, role: .cancel) { }
-            Button("emergency.contactAlert.call".localized) {
-                if let url = URL(string: "tel://116117") {
-                    UIApplication.shared.open(url)
                 }
             }
-        } message: {
-            Text("emergency.contactAlert.message".localized)
+            .safeAreaInset(edge: .bottom) {
+                // Banner Ad am unteren Rand (über Safe Area)
+                if AdManager.shared.shouldShowAds {
+                    BannerAdView()
+                        .frame(height: 50)
+                        .background(Color.backgroundPrimary)
+                }
+            }
+            .alert("emergency.contactAlert.title".localized, isPresented: $showContactAlert) {
+                Button("common.cancel".localized, role: .cancel) { }
+                Button("emergency.contactAlert.call".localized) {
+                    if let url = URL(string: "tel://116117") {
+                        UIApplication.shared.open(url)
+                    }
+                }
+            } message: {
+                Text("emergency.contactAlert.message".localized)
+            }
         }
+    }
+    
+    // MARK: - Header View
+    private var headerView: some View {
+        HStack(alignment: .center) {
+            Spacer()
+            
+            // Titel zentriert mit Icon - grünes Icon + schwarzer Text
+            HStack(spacing: 6) {
+                Image(systemName: emergency.severity == .critical ? "exclamationmark.triangle.fill" : "info.circle.fill")
+                    .font(.system(size: 18, weight: .medium))
+                    .foregroundColor(.brandPrimary)
+                
+                Text(emergency.localizedTitle)
+                    .font(.system(size: 18, weight: .bold))
+                    .foregroundColor(.textPrimary)
+                    .lineLimit(1)
+            }
+            
+            Spacer()
+            
+            // X-Button rechts
+            Button(action: {
+                dismiss()
+            }) {
+                Image(systemName: "xmark")
+                    .font(.system(size: 16, weight: .medium))
+                    .foregroundColor(.textSecondary)
+                    .frame(width: 30, height: 30)
+            }
+        }
+        .padding(.horizontal, Spacing.lg)
+        .padding(.vertical, 12)
+        .frame(height: 44)
+        .background(Color.backgroundPrimary)
     }
 }
 
