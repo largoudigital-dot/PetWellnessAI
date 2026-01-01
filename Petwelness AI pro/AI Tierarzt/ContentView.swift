@@ -48,15 +48,22 @@ struct ContentView: View {
             }
             
             // Banner Ad über der Navigation Bar (nur zeigen wenn Tab Bar sichtbar)
+            // WICHTIG: Banner Ad soll IMMER über der Navigation Bar erscheinen, wenn aktiviert
             if appState.isTabBarVisible {
                 VStack(spacing: 0) {
                     Spacer()
                     
-                    // Banner Ad (wenn aktiviert)
+                    // Banner Ad - IMMER anzeigen wenn Tab Bar sichtbar ist UND Banner Ads aktiviert sind
                     if AdManager.shared.shouldShowBannerAds {
                         BannerAdView()
                             .frame(height: 50)
                             .background(Color.backgroundPrimary)
+                            .onAppear {
+                                print("🔍 ContentView: Banner Ad wird angezeigt über Navigation Bar")
+                                print("   - shouldShowBannerAds: \(AdManager.shared.shouldShowBannerAds)")
+                                print("   - bannerEnabled: \(AdManager.shared.bannerEnabled)")
+                                print("   - isTabBarVisible: \(appState.isTabBarVisible)")
+                            }
                     }
                     
                     // Navigation Bar
@@ -66,6 +73,7 @@ struct ContentView: View {
                 .ignoresSafeArea(.keyboard, edges: .bottom)
                 .transition(.move(edge: .bottom).combined(with: .opacity))
                 .allowsHitTesting(true)
+                .zIndex(1000) // Sehr hoher zIndex, damit Banner über allen anderen Views ist
             }
         }
         .overlay {
