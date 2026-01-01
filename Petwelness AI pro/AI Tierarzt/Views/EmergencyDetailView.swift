@@ -52,7 +52,7 @@ struct EmergencyDetailView: View {
                                         .cornerRadius(CornerRadius.medium)
                                 }
                                 
-                                Text(emergency.title)
+                                Text(emergency.localizedTitle)
                                     .font(.appSubtitle)
                                     .foregroundColor(.white)
                                     .shadow(color: Color.black.opacity(0.3), radius: 2, x: 0, y: 1)
@@ -85,7 +85,7 @@ struct EmergencyDetailView: View {
                                     .cornerRadius(CornerRadius.medium)
                             }
                             
-                            Text(emergency.title)
+                            Text(emergency.localizedTitle)
                                 .font(.appSubtitle)
                                 .foregroundColor(.textPrimary)
                             
@@ -103,7 +103,7 @@ struct EmergencyDetailView: View {
                     }
                     
                     // Warning
-                    if let warning = emergency.warning {
+                    if let warning = emergency.localizedWarning {
                         HStack(spacing: Spacing.md) {
                             Image(systemName: "exclamationmark.triangle.fill")
                                 .font(.system(size: 20))
@@ -135,7 +135,7 @@ struct EmergencyDetailView: View {
                         }
                         
                         VStack(spacing: Spacing.sm) {
-                            ForEach(emergency.symptoms, id: \.self) { symptom in
+                            ForEach(emergency.localizedSymptoms, id: \.self) { symptom in
                                 HStack(spacing: Spacing.md) {
                                     Image(systemName: "checkmark.circle.fill")
                                         .font(.system(size: 16))
@@ -179,7 +179,7 @@ struct EmergencyDetailView: View {
                         }
                         
                         VStack(spacing: Spacing.md) {
-                            ForEach(Array(emergency.steps.enumerated()), id: \.offset) { index, step in
+                            ForEach(Array(emergency.localizedSteps.enumerated()), id: \.offset) { index, step in
                                 HStack(alignment: .top, spacing: Spacing.md) {
                                     ZStack {
                                         Circle()
@@ -261,7 +261,7 @@ struct EmergencyDetailView: View {
                 .padding(Spacing.xl)
             }
         }
-        .navigationTitle(emergency.title)
+        .navigationTitle(emergency.localizedTitle)
         .navigationBarTitleDisplayMode(.inline)
         .alert("emergency.contactAlert.title".localized, isPresented: $showContactAlert) {
             Button("common.cancel".localized, role: .cancel) { }

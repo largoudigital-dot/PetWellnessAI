@@ -15,4 +15,13 @@ extension Emergency {
     var localizedSymptoms: [String] {
         return symptoms.map { $0.localized }
     }
+    
+    var localizedSteps: [String] {
+        return steps.map { $0.localized }
+    }
+    
+    var localizedWarning: String? {
+        guard let warning = warning else { return nil }
+        return warning.localized
+    }
 }
