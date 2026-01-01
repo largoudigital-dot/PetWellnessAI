@@ -1,0 +1,654 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		913FDEF32F03759F00F9AD54 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 913FDEF22F03759F00F9AD54 /* FirebaseAnalytics */; };
+		913FDEF52F03759F00F9AD54 /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = 913FDEF42F03759F00F9AD54 /* FirebaseCore */; };
+		913FDFA72F0416E900F9AD54 /* GoogleMobileAds in Frameworks */ = {isa = PBXBuildFile; productRef = 913FDFA62F0416E900F9AD54 /* GoogleMobileAds */; };
+		913FE2652F0423C200F9AD54 /* FirebaseRemoteConfig in Frameworks */ = {isa = PBXBuildFile; productRef = 913FE2642F0423C200F9AD54 /* FirebaseRemoteConfig */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		910FC4692EE1F24D000659C8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 910FC4532EE1F24A000659C8 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 910FC45A2EE1F24A000659C8;
+			remoteInfo = "AI Tierarzt";
+		};
+		910FC4732EE1F24D000659C8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 910FC4532EE1F24A000659C8 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 910FC45A2EE1F24A000659C8;
+			remoteInfo = "AI Tierarzt";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		910FC45B2EE1F24A000659C8 /* AI Tierarzt.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "AI Tierarzt.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		910FC4682EE1F24D000659C8 /* AI TierarztTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "AI TierarztTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		910FC4722EE1F24D000659C8 /* AI TierarztUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "AI TierarztUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		910FC45D2EE1F24A000659C8 /* AI Tierarzt */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "AI Tierarzt";
+			sourceTree = "<group>";
+		};
+		910FC46B2EE1F24D000659C8 /* AI TierarztTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "AI TierarztTests";
+			sourceTree = "<group>";
+		};
+		910FC4752EE1F24D000659C8 /* AI TierarztUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "AI TierarztUITests";
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		910FC4582EE1F24A000659C8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				913FDFA72F0416E900F9AD54 /* GoogleMobileAds in Frameworks */,
+				913FDEF52F03759F00F9AD54 /* FirebaseCore in Frameworks */,
+				913FDEF32F03759F00F9AD54 /* FirebaseAnalytics in Frameworks */,
+				913FE2652F0423C200F9AD54 /* FirebaseRemoteConfig in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		910FC4652EE1F24D000659C8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		910FC46F2EE1F24D000659C8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		910FC4522EE1F24A000659C8 = {
+			isa = PBXGroup;
+			children = (
+				910FC45D2EE1F24A000659C8 /* AI Tierarzt */,
+				910FC46B2EE1F24D000659C8 /* AI TierarztTests */,
+				910FC4752EE1F24D000659C8 /* AI TierarztUITests */,
+				910FC45C2EE1F24A000659C8 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		910FC45C2EE1F24A000659C8 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				910FC45B2EE1F24A000659C8 /* AI Tierarzt.app */,
+				910FC4682EE1F24D000659C8 /* AI TierarztTests.xctest */,
+				910FC4722EE1F24D000659C8 /* AI TierarztUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		910FC45A2EE1F24A000659C8 /* AI Tierarzt */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 910FC47C2EE1F24D000659C8 /* Build configuration list for PBXNativeTarget "AI Tierarzt" */;
+			buildPhases = (
+				910FC4572EE1F24A000659C8 /* Sources */,
+				910FC4582EE1F24A000659C8 /* Frameworks */,
+				910FC4592EE1F24A000659C8 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				910FC45D2EE1F24A000659C8 /* AI Tierarzt */,
+			);
+			name = "AI Tierarzt";
+			packageProductDependencies = (
+				913FDEF22F03759F00F9AD54 /* FirebaseAnalytics */,
+				913FDEF42F03759F00F9AD54 /* FirebaseCore */,
+				913FDFA62F0416E900F9AD54 /* GoogleMobileAds */,
+				913FE2642F0423C200F9AD54 /* FirebaseRemoteConfig */,
+			);
+			productName = "AI Tierarzt";
+			productReference = 910FC45B2EE1F24A000659C8 /* AI Tierarzt.app */;
+			productType = "com.apple.product-type.application";
+		};
+		910FC4672EE1F24D000659C8 /* AI TierarztTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 910FC47F2EE1F24D000659C8 /* Build configuration list for PBXNativeTarget "AI TierarztTests" */;
+			buildPhases = (
+				910FC4642EE1F24D000659C8 /* Sources */,
+				910FC4652EE1F24D000659C8 /* Frameworks */,
+				910FC4662EE1F24D000659C8 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				910FC46A2EE1F24D000659C8 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				910FC46B2EE1F24D000659C8 /* AI TierarztTests */,
+			);
+			name = "AI TierarztTests";
+			packageProductDependencies = (
+			);
+			productName = "AI TierarztTests";
+			productReference = 910FC4682EE1F24D000659C8 /* AI TierarztTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		910FC4712EE1F24D000659C8 /* AI TierarztUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 910FC4822EE1F24D000659C8 /* Build configuration list for PBXNativeTarget "AI TierarztUITests" */;
+			buildPhases = (
+				910FC46E2EE1F24D000659C8 /* Sources */,
+				910FC46F2EE1F24D000659C8 /* Frameworks */,
+				910FC4702EE1F24D000659C8 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				910FC4742EE1F24D000659C8 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				910FC4752EE1F24D000659C8 /* AI TierarztUITests */,
+			);
+			name = "AI TierarztUITests";
+			packageProductDependencies = (
+			);
+			productName = "AI TierarztUITests";
+			productReference = 910FC4722EE1F24D000659C8 /* AI TierarztUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		910FC4532EE1F24A000659C8 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1640;
+				LastUpgradeCheck = 1640;
+				TargetAttributes = {
+					910FC45A2EE1F24A000659C8 = {
+						CreatedOnToolsVersion = 16.4;
+					};
+					910FC4672EE1F24D000659C8 = {
+						CreatedOnToolsVersion = 16.4;
+						TestTargetID = 910FC45A2EE1F24A000659C8;
+					};
+					910FC4712EE1F24D000659C8 = {
+						CreatedOnToolsVersion = 16.4;
+						TestTargetID = 910FC45A2EE1F24A000659C8;
+					};
+				};
+			};
+			buildConfigurationList = 910FC4562EE1F24A000659C8 /* Build configuration list for PBXProject "AI Tierarzt" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 910FC4522EE1F24A000659C8;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				913FDEF12F03759F00F9AD54 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				913FDFA52F0416E900F9AD54 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 910FC45C2EE1F24A000659C8 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				910FC45A2EE1F24A000659C8 /* AI Tierarzt */,
+				910FC4672EE1F24D000659C8 /* AI TierarztTests */,
+				910FC4712EE1F24D000659C8 /* AI TierarztUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		910FC4592EE1F24A000659C8 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		910FC4662EE1F24D000659C8 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		910FC4702EE1F24D000659C8 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		910FC4572EE1F24A000659C8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		910FC4642EE1F24D000659C8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		910FC46E2EE1F24D000659C8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		910FC46A2EE1F24D000659C8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 910FC45A2EE1F24A000659C8 /* AI Tierarzt */;
+			targetProxy = 910FC4692EE1F24D000659C8 /* PBXContainerItemProxy */;
+		};
+		910FC4742EE1F24D000659C8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 910FC45A2EE1F24A000659C8 /* AI Tierarzt */;
+			targetProxy = 910FC4732EE1F24D000659C8 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		910FC47A2EE1F24D000659C8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 324JS7T6K6;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		910FC47B2EE1F24D000659C8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 324JS7T6K6;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		910FC47D2EE1F24D000659C8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 2;
+				DEVELOPMENT_TEAM = 324JS7T6K6;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "AI-Tierarzt-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "PetWellness AI";
+				INFOPLIST_KEY_GADApplicationIdentifier = "ca-app-pub-3840959679571598~8015668845";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
+				INFOPLIST_KEY_NSCameraUsageDescription = "Diese App benötigt Zugriff auf die Kamera, um Fotos von Ihrem Haustier aufzunehmen und für die Gesundheitsakte zu speichern.";
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "Diese App benötigt Berechtigung, um Fotos von Ihrem Haustier in Ihrer Foto-Bibliothek zu speichern.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Diese App benötigt Zugriff auf Ihre Fotos, um Tierfotos zu speichern und in der Gesundheitsakte zu verwalten.";
+				INFOPLIST_KEY_NSUserNotificationsUsageDescription = "Diese App benötigt Zugriff auf Benachrichtigungen, um Sie an Medikamente, Impfungen und Termine für Ihr Haustier zu erinnern.";
+				INFOPLIST_KEY_NSUserTrackingUsageDescription = "Diese App verwendet Tracking, um Ihnen personalisierte Werbung anzuzeigen und die App zu verbessern. Sie können diese Berechtigung jederzeit in den Einstellungen widerrufen.";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.1;
+				PRODUCT_BUNDLE_IDENTIFIER = "devlargou.PetWellness-AI";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		910FC47E2EE1F24D000659C8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 2;
+				DEVELOPMENT_TEAM = 324JS7T6K6;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "AI-Tierarzt-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "PetWellness AI";
+				INFOPLIST_KEY_GADApplicationIdentifier = "ca-app-pub-3840959679571598~8015668845";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
+				INFOPLIST_KEY_NSCameraUsageDescription = "Diese App benötigt Zugriff auf die Kamera, um Fotos von Ihrem Haustier aufzunehmen und für die Gesundheitsakte zu speichern.";
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "Diese App benötigt Berechtigung, um Fotos von Ihrem Haustier in Ihrer Foto-Bibliothek zu speichern.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Diese App benötigt Zugriff auf Ihre Fotos, um Tierfotos zu speichern und in der Gesundheitsakte zu verwalten.";
+				INFOPLIST_KEY_NSUserNotificationsUsageDescription = "Diese App benötigt Zugriff auf Benachrichtigungen, um Sie an Medikamente, Impfungen und Termine für Ihr Haustier zu erinnern.";
+				INFOPLIST_KEY_NSUserTrackingUsageDescription = "Diese App verwendet Tracking, um Ihnen personalisierte Werbung anzuzeigen und die App zu verbessern. Sie können diese Berechtigung jederzeit in den Einstellungen widerrufen.";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.1;
+				PRODUCT_BUNDLE_IDENTIFIER = "devlargou.PetWellness-AI";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		910FC4802EE1F24D000659C8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 324JS7T6K6;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "devlargou.AI-TierarztTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AI Tierarzt.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/AI Tierarzt";
+			};
+			name = Debug;
+		};
+		910FC4812EE1F24D000659C8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 324JS7T6K6;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "devlargou.AI-TierarztTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AI Tierarzt.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/AI Tierarzt";
+			};
+			name = Release;
+		};
+		910FC4832EE1F24D000659C8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 324JS7T6K6;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "devlargou.AI-TierarztUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "AI Tierarzt";
+			};
+			name = Debug;
+		};
+		910FC4842EE1F24D000659C8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 324JS7T6K6;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "devlargou.AI-TierarztUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "AI Tierarzt";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		910FC4562EE1F24A000659C8 /* Build configuration list for PBXProject "AI Tierarzt" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				910FC47A2EE1F24D000659C8 /* Debug */,
+				910FC47B2EE1F24D000659C8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		910FC47C2EE1F24D000659C8 /* Build configuration list for PBXNativeTarget "AI Tierarzt" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				910FC47D2EE1F24D000659C8 /* Debug */,
+				910FC47E2EE1F24D000659C8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		910FC47F2EE1F24D000659C8 /* Build configuration list for PBXNativeTarget "AI TierarztTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				910FC4802EE1F24D000659C8 /* Debug */,
+				910FC4812EE1F24D000659C8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		910FC4822EE1F24D000659C8 /* Build configuration list for PBXNativeTarget "AI TierarztUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				910FC4832EE1F24D000659C8 /* Debug */,
+				910FC4842EE1F24D000659C8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		913FDEF12F03759F00F9AD54 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 12.7.0;
+			};
+		};
+		913FDFA52F0416E900F9AD54 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/googleads/swift-package-manager-google-mobile-ads";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 12.14.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		913FDEF22F03759F00F9AD54 /* FirebaseAnalytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 913FDEF12F03759F00F9AD54 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalytics;
+		};
+		913FDEF42F03759F00F9AD54 /* FirebaseCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 913FDEF12F03759F00F9AD54 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCore;
+		};
+		913FDFA62F0416E900F9AD54 /* GoogleMobileAds */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 913FDFA52F0416E900F9AD54 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */;
+			productName = GoogleMobileAds;
+		};
+		913FE2642F0423C200F9AD54 /* FirebaseRemoteConfig */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 913FDEF12F03759F00F9AD54 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseRemoteConfig;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 910FC4532EE1F24A000659C8 /* Project object */;
+}

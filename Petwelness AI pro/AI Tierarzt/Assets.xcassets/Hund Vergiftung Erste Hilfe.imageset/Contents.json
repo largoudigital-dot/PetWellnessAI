@@ -1,0 +1,23 @@
+{
+  "images" : [
+    {
+      "filename" : "Hund Vergiftung Erste Hilfe.png",
+      "idiom" : "universal",
+      "scale" : "1x"
+    },
+    {
+      "filename" : "Hund Vergiftung Erste Hilfe 1.png",
+      "idiom" : "universal",
+      "scale" : "2x"
+    },
+    {
+      "filename" : "Hund Vergiftung Erste Hilfe 2.png",
+      "idiom" : "universal",
+      "scale" : "3x"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Support - PetWellness AI</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #0A7A63 0%, #146B94 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #0A7A63 0%, #146B94 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.95;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .section h2 {
+            color: #0A7A63;
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #0A7A63;
+        }
+
+        .section h3 {
+            color: #146B94;
+            font-size: 1.3em;
+            margin-top: 25px;
+            margin-bottom: 15px;
+        }
+
+        .contact-info {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 8px;
+            border-left: 4px solid #0A7A63;
+            margin: 20px 0;
+        }
+
+        .contact-info p {
+            margin: 10px 0;
+            font-size: 1.05em;
+        }
+
+        .contact-info strong {
+            color: #0A7A63;
+            display: inline-block;
+            min-width: 120px;
+        }
+
+        .contact-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #0A7A63 0%, #146B94 100%);
+            color: white;
+            padding: 15px 30px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            margin: 15px 10px 15px 0;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 15px rgba(10, 122, 99, 0.3);
+        }
+
+        .contact-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(10, 122, 99, 0.4);
+        }
+
+        .contact-button.secondary {
+            background: white;
+            color: #0A7A63;
+            border: 2px solid #0A7A63;
+        }
+
+        .contact-button.secondary:hover {
+            background: #0A7A63;
+            color: white;
+        }
+
+        .faq-item {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border-left: 4px solid #146B94;
+        }
+
+        .faq-item h3 {
+            color: #146B94;
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+
+        .faq-item p {
+            color: #555;
+            line-height: 1.7;
+        }
+
+        .hours {
+            background: #fff3cd;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #ffc107;
+            margin: 20px 0;
+        }
+
+        .hours h3 {
+            color: #856404;
+            margin-top: 0;
+        }
+
+        .hours p {
+            color: #856404;
+            margin: 5px 0;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .social-link {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #f8f9fa;
+            color: #0A7A63;
+            text-decoration: none;
+            border-radius: 6px;
+            border: 1px solid #dee2e6;
+            transition: all 0.2s;
+        }
+
+        .social-link:hover {
+            background: #0A7A63;
+            color: white;
+            border-color: #0A7A63;
+        }
+
+        .footer {
+            background: #f8f9fa;
+            padding: 30px;
+            text-align: center;
+            color: #666;
+            border-top: 1px solid #dee2e6;
+        }
+
+        .footer a {
+            color: #0A7A63;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .content {
+                padding: 25px;
+            }
+
+            .section h2 {
+                font-size: 1.5em;
+            }
+
+            .contact-button {
+                display: block;
+                text-align: center;
+                margin: 10px 0;
+            }
+        }
+
+        .icon {
+            display: inline-block;
+            margin-right: 8px;
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🐾 PetWellness AI Support</h1>
+            <p>We're here to help you and your pets!</p>
+        </div>
+
+        <div class="content">
+            <!-- Contact Section -->
+            <div class="section">
+                <h2>Contact Us</h2>
+                <p>Have a question, feedback, or need assistance? We'd love to hear from you!</p>
+                
+                <div class="contact-info">
+                    <p><strong>Developer:</strong> devlargou</p>
+                    <p><strong>Address:</strong> Hannover, Germany</p>
+                    <p><strong>Email:</strong> <a href="mailto:largou.digital@gmail.com" style="color: #0A7A63; text-decoration: none;">largou.digital@gmail.com</a></p>
+                    <p><strong>Support Email:</strong> <a href="mailto:largou.digital@gmail.com" style="color: #0A7A63; text-decoration: none;">largou.digital@gmail.com</a></p>
+                    <p><strong>Website:</strong> <a href="https://devlargou.com" target="_blank" style="color: #0A7A63; text-decoration: none;">https://devlargou.com</a></p>
+                </div>
+
+                <div style="margin-top: 25px;">
+                    <a href="mailto:largou.digital@gmail.com?subject=PetWellness AI Support Request" class="contact-button">
+                        📧 Send Email
+                    </a>
+                    <a href="mailto:largou.digital@gmail.com?subject=PetWellness AI Feature Request" class="contact-button secondary">
+                        💡 Feature Request
+                    </a>
+                    <a href="mailto:largou.digital@gmail.com?subject=PetWellness AI Bug Report" class="contact-button secondary">
+                        🐛 Report Bug
+                    </a>
+                </div>
+
+                <div class="hours">
+                    <h3>⏰ Response Time</h3>
+                    <p><strong>We aim to respond within 24-48 hours</strong></p>
+                    <p>For urgent matters, please include "URGENT" in your email subject line.</p>
+                </div>
+            </div>
+
+            <!-- FAQ Section -->
+            <div class="section">
+                <h2>Frequently Asked Questions</h2>
+
+                <div class="faq-item">
+                    <h3>❓ How do I use the AI chat feature?</h3>
+                    <p>Simply open the chat in the app and type your question about your pet's health. The AI assistant will provide general information and advice. Remember, this is not a substitute for professional veterinary care.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h3>📸 How do I analyze a photo of my pet?</h3>
+                    <p>Go to the "Photo Analysis" section, select or take a photo of your pet, and tap "Analyze". The AI will analyze the photo and provide insights. For accurate diagnosis, always consult a licensed veterinarian.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h3>💊 How do I add medications and set reminders?</h3>
+                    <p>Navigate to your pet's profile, go to "Medications", and tap the "+" button to add a medication. You can set reminders for medication times, and the app will send you notifications.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h3>📅 How do I schedule appointments and vaccinations?</h3>
+                    <p>In your pet's profile, you'll find sections for "Appointments" and "Vaccinations". Add new entries and set dates. The app will remind you of upcoming appointments and vaccinations.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h3>🌍 Is the app available in my language?</h3>
+                    <p>PetWellness AI supports 15 languages: English, German, Spanish, French, Italian, Portuguese, Dutch, Polish, Russian, Turkish, Japanese, Chinese, Korean, Arabic, and Hindi. The app automatically detects your device language.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h3>🔒 How is my data protected?</h3>
+                    <p>All your data is stored locally on your device. We do not store your data on our servers. When using AI features, your messages and photos are processed by third-party AI services (Claude, Google Gemini) according to their privacy policies. For more details, see our <a href="https://devlargou.com/PetWellnessAI/Privacy-Policy" style="color: #0A7A63;">Privacy Policy</a>.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h3>📱 Why am I seeing ads?</h3>
+                    <p>PetWellness AI is free to use and supported by advertisements. We use Google AdMob to display ads. You can manage your ad preferences through the consent dialog when you first open the app.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h3>🐛 I found a bug. How do I report it?</h3>
+                    <p>Please email us at <a href="mailto:largou.digital@gmail.com?subject=Bug Report" style="color: #0A7A63;">largou.digital@gmail.com</a> with "Bug Report" in the subject line. Include details about what happened, when it occurred, and your device model and iOS version.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h3>💡 I have a feature suggestion. Can I share it?</h3>
+                    <p>Absolutely! We love hearing from our users. Send us an email at <a href="mailto:largou.digital@gmail.com?subject=Feature Request" style="color: #0A7A63;">largou.digital@gmail.com</a> with "Feature Request" in the subject line and describe your idea.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h3>⚠️ Is this app a substitute for veterinary care?</h3>
+                    <p><strong>No.</strong> PetWellness AI is designed to provide general health information and support. It is NOT a substitute for professional veterinary care, diagnosis, or treatment. Always consult a licensed veterinarian for medical advice, emergencies, and treatment plans.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h3>📤 Can I export my pet's health data?</h3>
+                    <p>Yes! You can export your pet's health records through the app settings. This allows you to backup your data or share it with your veterinarian.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h3>🔄 How do I update the app?</h3>
+                    <p>Updates are available through the App Store. When a new version is released, you'll receive a notification. You can also check manually in the App Store app.</p>
+                </div>
+            </div>
+
+            <!-- Privacy & Legal Section -->
+            <div class="section">
+                <h2>Privacy & Legal</h2>
+                <p>For information about how we handle your data, please review our legal documents:</p>
+                <div style="margin-top: 20px;">
+                    <a href="https://devlargou.com/PetWellnessAI/Privacy-Policy" class="contact-button secondary" style="margin-right: 10px;">
+                        🔒 Privacy Policy
+                    </a>
+                    <a href="https://devlargou.com/PetWellnessAI/Terms" class="contact-button secondary">
+                        📜 Terms of Service
+                    </a>
+                </div>
+            </div>
+
+            <!-- Feedback Section -->
+            <div class="section">
+                <h2>We Value Your Feedback</h2>
+                <p>Your feedback helps us improve PetWellness AI. Whether you have suggestions, found a bug, or just want to share your experience, we'd love to hear from you!</p>
+                <p style="margin-top: 15px;"><strong>Thank you for using PetWellness AI! 🐾</strong></p>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p><strong>PetWellness AI</strong> - AI-Powered Pet Health Assistant</p>
+            <p style="margin-top: 10px;">
+                <a href="https://devlargou.com/PetWellnessAI/Privacy-Policy">Privacy Policy</a> |
+                <a href="https://devlargou.com/PetWellnessAI/Terms">Terms of Service</a> |
+                <a href="https://devlargou.com">Website</a>
+            </p>
+            <p style="margin-top: 15px; font-size: 0.9em; color: #999;">
+                © 2025 devlargou. All rights reserved.<br>
+                Hannover, Germany
+            </p>
+        </div>
+    </div>
+</body>
+</html>
+
