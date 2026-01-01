@@ -136,30 +136,35 @@ struct EmergencyDetailView: View {
                         
                         VStack(spacing: Spacing.sm) {
                             ForEach(emergency.localizedSymptoms, id: \.self) { symptom in
-                                HStack(spacing: Spacing.md) {
+                                HStack(alignment: .top, spacing: Spacing.md) {
                                     Image(systemName: "checkmark.circle.fill")
                                         .font(.system(size: 16))
                                         .foregroundColor(.brandPrimary)
+                                        .padding(.top, 2)
                                     
                                     Text(symptom)
                                         .font(.bodyText)
                                         .foregroundColor(.textPrimary)
+                                        .fixedSize(horizontal: false, vertical: true)
                                     
-                                    Spacer()
+                                    Spacer(minLength: 0)
                                 }
                                 .padding(.vertical, Spacing.xs)
+                                .frame(maxWidth: .infinity, alignment: .leading)
                             }
                         }
                     }
                     .padding(Spacing.lg)
                     .background(
-                        LinearGradient(
-                            colors: [Color.backgroundSecondary, Color.backgroundSecondary.opacity(0.8)],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        )
+                        RoundedRectangle(cornerRadius: CornerRadius.large)
+                            .fill(
+                                LinearGradient(
+                                    colors: [Color.backgroundSecondary, Color.backgroundSecondary.opacity(0.8)],
+                                    startPoint: .topLeading,
+                                    endPoint: .bottomTrailing
+                                )
+                            )
                     )
-                    .cornerRadius(CornerRadius.large)
                     .overlay(
                         RoundedRectangle(cornerRadius: CornerRadius.large)
                             .stroke(Color.brandPrimary.opacity(0.1), lineWidth: 1)
