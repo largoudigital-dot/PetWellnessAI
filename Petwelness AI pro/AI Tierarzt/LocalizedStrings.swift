@@ -16116,6 +16116,23 @@ struct LocalizedStrings {
             "hi": "तेज सांस लेना"
         ],
         // Emergency Steps (First Aid Instructions)
+        "Ruhe bewahren": [
+            "en": "Stay calm",
+            "de": "Ruhe bewahren",
+            "es": "Mantén la calma",
+            "fr": "Restez calme",
+            "it": "Mantieni la calma",
+            "pt": "Mantenha a calma",
+            "nl": "Blijf kalm",
+            "pl": "Zachowaj spokój",
+            "ru": "Сохраняйте спокойствие",
+            "tr": "Sakin kalın",
+            "ja": "冷静を保つ",
+            "zh": "保持冷静",
+            "ko": "침착을 유지하세요",
+            "ar": "ابق هادئًا",
+            "hi": "शांत रहें"
+        ],
         "Ruhe bewahren und das Tier beruhigen": [
             "en": "Stay calm and calm the animal",
             "de": "Ruhe bewahren und das Tier beruhigen",

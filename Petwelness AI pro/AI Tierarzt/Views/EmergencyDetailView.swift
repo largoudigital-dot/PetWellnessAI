@@ -178,9 +178,10 @@ struct EmergencyDetailView: View {
                                 .foregroundColor(.textPrimary)
                         }
                         
-                        VStack(spacing: Spacing.md) {
+                        VStack(spacing: Spacing.sm) {
                             ForEach(Array(emergency.localizedSteps.enumerated()), id: \.offset) { index, step in
                                 HStack(alignment: .top, spacing: Spacing.md) {
+                                    // Step Number Badge
                                     ZStack {
                                         Circle()
                                             .fill(
@@ -194,36 +195,42 @@ struct EmergencyDetailView: View {
                                             .shadow(color: Color.brandPrimary.opacity(0.3), radius: 4, x: 0, y: 2)
                                         
                                         Text("\(index + 1)")
-                                            .font(.bodyTextBold)
+                                            .font(.system(size: 14, weight: .bold))
                                             .foregroundColor(.white)
                                     }
+                                    .frame(width: 32)
                                     
+                                    // Step Text
                                     Text(step)
                                         .font(.bodyText)
                                         .foregroundColor(.textPrimary)
                                         .fixedSize(horizontal: false, vertical: true)
+                                        .multilineTextAlignment(.leading)
                                     
-                                    Spacer()
+                                    Spacer(minLength: 0)
                                 }
                                 .padding(Spacing.md)
+                                .frame(maxWidth: .infinity, alignment: .leading)
                                 .background(
-                                    index % 2 == 0 
-                                        ? Color.backgroundSecondary.opacity(0.5)
-                                        : Color.clear
+                                    RoundedRectangle(cornerRadius: CornerRadius.medium)
+                                        .fill(index % 2 == 0 
+                                            ? Color.backgroundSecondary.opacity(0.5)
+                                            : Color.clear)
                                 )
-                                .cornerRadius(CornerRadius.medium)
                             }
                         }
                     }
                     .padding(Spacing.lg)
                     .background(
-                        LinearGradient(
-                            colors: [Color.backgroundSecondary, Color.backgroundSecondary.opacity(0.8)],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        )
+                        RoundedRectangle(cornerRadius: CornerRadius.large)
+                            .fill(
+                                LinearGradient(
+                                    colors: [Color.backgroundSecondary, Color.backgroundSecondary.opacity(0.8)],
+                                    startPoint: .topLeading,
+                                    endPoint: .bottomTrailing
+                                )
+                            )
                     )
-                    .cornerRadius(CornerRadius.large)
                     .overlay(
                         RoundedRectangle(cornerRadius: CornerRadius.large)
                             .stroke(Color.accentRed.opacity(0.1), lineWidth: 1)
