@@ -129,7 +129,7 @@ struct EmergencyDetailView: View {
                                 .font(.system(size: 20))
                                 .foregroundColor(.brandPrimary)
                             
-                            Text("Symptome")
+                            Text("emergency.symptoms".localized)
                                 .font(.sectionTitle)
                                 .foregroundColor(.textPrimary)
                         }
@@ -173,7 +173,7 @@ struct EmergencyDetailView: View {
                                 .font(.system(size: 20))
                                 .foregroundColor(.accentRed)
                             
-                            Text("Erste-Hilfe-Schritte")
+                            Text("emergency.firstAidSteps".localized)
                                 .font(.sectionTitle)
                                 .foregroundColor(.textPrimary)
                         }
@@ -239,7 +239,7 @@ struct EmergencyDetailView: View {
                                 .font(.system(size: 20))
                                 .foregroundColor(.white)
                             
-                            Text("Tierärztlichen Notdienst kontaktieren")
+                            Text("emergency.contactVet".localized)
                                 .font(.bodyTextBold)
                                 .foregroundColor(.white)
                         }
@@ -263,15 +263,15 @@ struct EmergencyDetailView: View {
         }
         .navigationTitle(emergency.title)
         .navigationBarTitleDisplayMode(.inline)
-        .alert("Notdienst kontaktieren", isPresented: $showContactAlert) {
-            Button("Abbrechen", role: .cancel) { }
-            Button("116 117 anrufen") {
+        .alert("emergency.contactAlert.title".localized, isPresented: $showContactAlert) {
+            Button("common.cancel".localized, role: .cancel) { }
+            Button("emergency.contactAlert.call".localized) {
                 if let url = URL(string: "tel://116117") {
                     UIApplication.shared.open(url)
                 }
             }
         } message: {
-            Text("Möchten Sie den tierärztlichen Notdienst unter 116 117 anrufen?")
+            Text("emergency.contactAlert.message".localized)
         }
     }
 }
