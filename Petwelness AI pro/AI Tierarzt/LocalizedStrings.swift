@@ -15570,23 +15570,6 @@ struct LocalizedStrings {
             "ar": "الجروح والقطع",
             "hi": "कट और घाव"
         ],
-        "Erbrechen": [
-            "en": "Vomiting",
-            "de": "Erbrechen",
-            "es": "Vómitos",
-            "fr": "Vomissements",
-            "it": "Vomito",
-            "pt": "Vômito",
-            "nl": "Braken",
-            "pl": "Wymioty",
-            "ru": "Рвота",
-            "tr": "Kusma",
-            "ja": "嘔吐",
-            "zh": "呕吐",
-            "ko": "구토",
-            "ar": "القيء",
-            "hi": "उल्टी"
-        ],
         "Knochenbruch": [
             "en": "Bone Fracture",
             "de": "Knochenbruch",
@@ -15637,23 +15620,6 @@ struct LocalizedStrings {
             "ko": "낙상",
             "ar": "السقوط",
             "hi": "गिरना"
-        ],
-        "Atemnot": [
-            "en": "Breathing Difficulty",
-            "de": "Atemnot",
-            "es": "Dificultad Respiratoria",
-            "fr": "Difficulté Respiratoire",
-            "it": "Difficoltà Respiratoria",
-            "pt": "Dificuldade Respiratória",
-            "nl": "Ademhalingsproblemen",
-            "pl": "Trudności w Oddychaniu",
-            "ru": "Затрудненное Дыхание",
-            "tr": "Nefes Alma Güçlüğü",
-            "ja": "呼吸困難",
-            "zh": "呼吸困难",
-            "ko": "호흡 곤란",
-            "ar": "صعوبة التنفس",
-            "hi": "सांस लेने में कठिनाई"
         ],
         "Schock": [
             "en": "Shock",
