@@ -480,12 +480,16 @@ struct ChatView: View {
                 // Hole aktuelle Sprache
                 let language = localizationManager.currentLanguage
                 
+                // Prüfe ob es die erste User-Nachricht ist (keine vorherigen User-Nachrichten außer der aktuellen)
+                let isFirstMessage = messages.filter { $0.isUser }.count == 1
+                
                 // Sende Nachricht an Claude
                 let response = try await ClaudeAPIService.shared.sendMessage(
                     trimmedText,
                     imageData: imageData,
                     conversationHistory: messages,
-                    language: language
+                    language: language,
+                    isFirstMessage: isFirstMessage
                 )
                 
                 // Update UI auf Main Thread
