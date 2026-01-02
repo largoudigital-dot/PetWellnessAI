@@ -67,6 +67,14 @@ struct TutorialsView: View {
                         .padding(.horizontal, Spacing.xl)
                         .padding(.top, Spacing.md)
                         
+                        // Banner Ad zwischen Tutorial-Kategorien und Detail-Content
+                        if AdManager.shared.shouldShowBannerAds {
+                            BannerAdView()
+                                .frame(height: 50)
+                                .padding(.horizontal, Spacing.xl)
+                                .padding(.vertical, Spacing.md)
+                        }
+                        
                         // Selected Category Details
                         if let category = selectedCategory {
                             categoryDetailView(for: category)
@@ -75,14 +83,6 @@ struct TutorialsView: View {
                     }
                     .padding(.bottom, Spacing.xxl)
                 }
-            }
-        }
-        .safeAreaInset(edge: .bottom) {
-            // Banner Ad am unteren Rand (über Safe Area)
-            if AdManager.shared.shouldShowBannerAds {
-                BannerAdView()
-                    .frame(height: 50)
-                    .background(Color.backgroundPrimary)
             }
         }
     }

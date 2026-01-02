@@ -10,7 +10,6 @@ import SwiftUI
 struct EmergencyDetailView: View {
     let emergency: Emergency
     let categoryName: String
-    @State private var showContactAlert = false
     @Environment(\.dismiss) var dismiss
     @State private var screenHeight: CGFloat = UIScreen.main.bounds.height
     
@@ -93,6 +92,14 @@ struct EmergencyDetailView: View {
                         .cornerRadius(CornerRadius.large)
                         .padding(.horizontal, Spacing.xl)
                         
+                        // Banner Ad zwischen "Symptômes" und "Étapes de Premiers Secours"
+                        if AdManager.shared.shouldShowBannerAds {
+                            BannerAdView()
+                                .frame(height: 50)
+                                .padding(.horizontal, Spacing.xl)
+                                .padding(.vertical, Spacing.md)
+                        }
+                        
                         // Erste-Hilfe-Schritte Card
                         VStack(alignment: .leading, spacing: Spacing.md) {
                             HStack(spacing: Spacing.sm) {
@@ -135,50 +142,10 @@ struct EmergencyDetailView: View {
                         .background(Color.backgroundSecondary)
                         .cornerRadius(CornerRadius.large)
                         .padding(.horizontal, Spacing.xl)
-                    
-                        // Notfall-Kontakt Button
-                        Button(action: {
-                            showContactAlert = true
-                        }) {
-                            HStack(spacing: Spacing.md) {
-                                Image(systemName: "phone.fill")
-                                    .font(.system(size: 20))
-                                    .foregroundColor(.white)
-                                
-                                Text("emergency.contactVet".localized)
-                                    .font(.system(size: 17, weight: .semibold))
-                                    .foregroundColor(.white)
-                            }
-                            .frame(maxWidth: .infinity)
-                            .padding(Spacing.lg)
-                            .background(Color.accentRed)
-                            .cornerRadius(CornerRadius.large)
-                        }
-                        .buttonStyle(PlainButtonStyle())
-                        .padding(.horizontal, Spacing.xl)
-                        .padding(.top, Spacing.lg)
                         .padding(.bottom, Spacing.xl)
                         }
                     }
                 }
-            }
-            .safeAreaInset(edge: .bottom) {
-                // Banner Ad am unteren Rand (über Safe Area)
-                if AdManager.shared.shouldShowBannerAds {
-                    BannerAdView()
-                        .frame(height: 50)
-                        .background(Color.backgroundPrimary)
-                }
-            }
-            .alert("emergency.contactAlert.title".localized, isPresented: $showContactAlert) {
-                Button("common.cancel".localized, role: .cancel) { }
-                Button("emergency.contactAlert.call".localized) {
-                    if let url = URL(string: "tel://116117") {
-                        UIApplication.shared.open(url)
-                    }
-                }
-            } message: {
-                Text("emergency.contactAlert.message".localized)
             }
         }
     }
@@ -186,6 +153,16 @@ struct EmergencyDetailView: View {
     // MARK: - Header View
     private var headerView: some View {
         HStack(alignment: .center) {
+            // X-Button links
+            Button(action: {
+                dismiss()
+            }) {
+                Image(systemName: "xmark")
+                    .font(.system(size: 16, weight: .medium))
+                    .foregroundColor(.textSecondary)
+                    .frame(width: 30, height: 30)
+            }
+            
             Spacer()
             
             // Titel zentriert mit Icon - grünes Icon + schwarzer Text
@@ -202,15 +179,9 @@ struct EmergencyDetailView: View {
             
             Spacer()
             
-            // X-Button rechts
-            Button(action: {
-                dismiss()
-            }) {
-                Image(systemName: "xmark")
-                    .font(.system(size: 16, weight: .medium))
-                    .foregroundColor(.textSecondary)
-                    .frame(width: 30, height: 30)
-            }
+            // Platzhalter rechts für symmetrisches Layout
+            Color.clear
+                .frame(width: 30, height: 30)
         }
         .padding(.horizontal, Spacing.lg)
         .padding(.vertical, 12)

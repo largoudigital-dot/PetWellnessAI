@@ -97,6 +97,14 @@ struct PhotoAnalysisView: View {
                         }
                         .padding(.top, isIPad ? Spacing.xxl : Spacing.xl)
                         
+                        // Banner Ad unter den beiden Buttons vor "Conseils" Bereich
+                        if AdManager.shared.shouldShowBannerAds {
+                            BannerAdView()
+                                .frame(height: 50)
+                                .padding(.horizontal, isIPad ? Spacing.xxl : Spacing.xl)
+                                .padding(.vertical, Spacing.sm)
+                        }
+                        
                         // Tips Section
                         VStack(alignment: .leading, spacing: isIPad ? Spacing.lg : Spacing.md) {
                             HStack(spacing: isIPad ? Spacing.md : Spacing.sm) {

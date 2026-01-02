@@ -76,6 +76,14 @@ struct ResourcesView: View {
                         .padding(.horizontal, Spacing.xl)
                         .padding(.top, Spacing.md)
                         
+                        // Banner Ad zwischen Haupt-Kategorien und FAQ-Bereich
+                        if AdManager.shared.shouldShowBannerAds {
+                            BannerAdView()
+                                .frame(height: 50)
+                                .padding(.horizontal, Spacing.xl)
+                                .padding(.vertical, Spacing.md)
+                        }
+                        
                         // Selected Resource Details
                         if let resource = selectedResource {
                             resourceDetailView(for: resource)
@@ -84,14 +92,6 @@ struct ResourcesView: View {
                     }
                     .padding(.bottom, Spacing.xxl)
                 }
-            }
-        }
-        .safeAreaInset(edge: .bottom) {
-            // Banner Ad am unteren Rand (über Safe Area)
-            if AdManager.shared.shouldShowBannerAds {
-                BannerAdView()
-                    .frame(height: 50)
-                    .background(Color.backgroundPrimary)
             }
         }
         .fullScreenCover(item: $selectedGuide) { guide in

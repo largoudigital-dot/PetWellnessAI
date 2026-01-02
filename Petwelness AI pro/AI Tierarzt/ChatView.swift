@@ -33,16 +33,15 @@ struct ChatView: View {
         horizontalSizeClass == .regular && verticalSizeClass == .regular
     }
     
-    // Berechnung für Bottom Padding (Eingabefeld + Navigation Bar + Banner Ad nur wenn Tastatur nicht sichtbar)
+    // Berechnung für Bottom Padding (Eingabefeld + Navigation Bar nur wenn Tastatur nicht sichtbar)
     private var bottomPadding: CGFloat {
         let inputHeight = isIPad ? 80.0 : 70.0
-        // Wenn Tastatur sichtbar ist, nur Eingabefeld-Höhe, sonst + Navigation Bar + Banner Ad
+        // Wenn Tastatur sichtbar ist, nur Eingabefeld-Höhe, sonst + Navigation Bar
         if isKeyboardVisible {
             return inputHeight
         } else {
             let navBarHeight = isIPad ? 91.0 : 37.0
-            let bannerAdHeight = AdManager.shared.shouldShowAds ? 50.0 : 0.0
-            return inputHeight + navBarHeight + bannerAdHeight
+            return inputHeight + navBarHeight
         }
     }
     
@@ -127,6 +126,13 @@ struct ChatView: View {
                 
                 // Disclaimer Banner - Immer sichtbar oben im Chat
                 disclaimerBanner
+                
+                // Banner Ad unter dem Disclaimer-Banner
+                if AdManager.shared.shouldShowBannerAds {
+                    BannerAdView()
+                        .frame(height: 50)
+                        .padding(.vertical, Spacing.sm)
+                }
                 
                 // Messages Area
                 ScrollViewReader { proxy in
@@ -217,13 +223,6 @@ struct ChatView: View {
                 )
                 .frame(height: (horizontalSizeClass == .regular && verticalSizeClass == .regular) ? 80 : 70)
                 .background(Color.backgroundSecondary)
-                
-                // Banner Ad über Navigation Bar (nur wenn Tastatur NICHT sichtbar ist)
-                if !isKeyboardVisible && AdManager.shared.shouldShowBannerAds {
-                    BannerAdView()
-                        .frame(height: 50)
-                        .background(Color.backgroundPrimary)
-                }
                 
                 // Padding nur wenn Tastatur NICHT sichtbar ist (für Navigation Bar)
                 if !isKeyboardVisible {

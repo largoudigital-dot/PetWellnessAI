@@ -56,8 +56,10 @@ class FirebaseManager {
     private func configureRemoteConfig() {
         #if canImport(FirebaseRemoteConfig)
         let settings = RemoteConfigSettings()
-        settings.minimumFetchInterval = 3600 // 1 Stunde (für Production)
-        // Für Development: settings.minimumFetchInterval = 0
+        // WICHTIG: minimumFetchInterval = 0 bedeutet sofortiges Neuladen möglich
+        // Änderungen in Firebase werden sofort angezeigt (kein 1-Stunden-Cache)
+        settings.minimumFetchInterval = 0 // Sofortiges Neuladen möglich
+        print("🔧 Remote Config: Sofortiges Neuladen aktiviert (minimumFetchInterval = 0)")
         remoteConfig.configSettings = settings
         
         // WICHTIG: Keine Default-Werte - alle Ad Unit IDs müssen in Firebase Remote Config konfiguriert sein
@@ -73,6 +75,7 @@ class FirebaseManager {
     
     func fetchRemoteConfig(completion: ((Bool) -> Void)? = nil) {
         #if canImport(FirebaseRemoteConfig)
+        print("🔄 Lade Firebase Remote Config...")
         remoteConfig.fetch { [weak self] status, error in
             guard let self = self else {
                 completion?(false)
@@ -92,6 +95,12 @@ class FirebaseManager {
                         completion?(false)
                     } else {
                         print("✅ Remote Config geladen (geändert: \(changed))")
+                        if changed {
+                            print("📝 WICHTIG: Remote Config Werte haben sich geändert!")
+                            print("   - ads_enabled: \(self.getBool(key: "ads_enabled"))")
+                            print("   - banner_enabled: \(self.getBool(key: "banner_enabled"))")
+                            print("   - interstitial_enabled: \(self.getBool(key: "interstitial_enabled"))")
+                        }
                         completion?(true)
                     }
                 }
@@ -99,6 +108,30 @@ class FirebaseManager {
                 print("⚠️ Remote Config Fetch Status: \(status.rawValue)")
                 completion?(false)
             }
+        }
+        #else
+        completion?(false)
+        #endif
+    }
+    
+    // MARK: - Force Fetch Remote Config (ignoriert minimumFetchInterval)
+    func forceFetchRemoteConfig(completion: ((Bool) -> Void)? = nil) {
+        #if canImport(FirebaseRemoteConfig)
+        print("🔄 Force Fetch: Lade Firebase Remote Config sofort (ignoriert Cache)...")
+        // Temporär minimumFetchInterval auf 0 setzen für sofortiges Neuladen
+        let originalInterval = remoteConfig.configSettings.minimumFetchInterval
+        let tempSettings = RemoteConfigSettings()
+        tempSettings.minimumFetchInterval = 0
+        remoteConfig.configSettings = tempSettings
+        
+        fetchRemoteConfig { [weak self] success in
+            // Stelle originales Interval wieder her
+            if let self = self {
+                let restoreSettings = RemoteConfigSettings()
+                restoreSettings.minimumFetchInterval = originalInterval
+                self.remoteConfig.configSettings = restoreSettings
+            }
+            completion?(success)
         }
         #else
         completion?(false)

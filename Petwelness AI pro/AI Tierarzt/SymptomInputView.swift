@@ -107,6 +107,14 @@ struct SymptomInputView: View {
                         }
                         .padding(.top, Spacing.lg)
                         
+                        // Banner Ad unter "Symptômes courants" Grid vor "Description supplémentaire"
+                        if AdManager.shared.shouldShowBannerAds {
+                            BannerAdView()
+                                .frame(height: 50)
+                                .padding(.horizontal, Spacing.xl)
+                                .padding(.vertical, Spacing.sm)
+                        }
+                        
                         // Additional Notes
                         VStack(alignment: .leading, spacing: Spacing.md) {
                             Text("symptomInput.additionalDescription".localized)

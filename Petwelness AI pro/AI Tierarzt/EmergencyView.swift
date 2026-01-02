@@ -10,6 +10,7 @@ import SwiftUI
 struct EmergencyView: View {
     @StateObject private var viewModel = PetFirstAidViewModel()
     @State private var selectedCategory: PetCategory?
+    @State private var showEmergencyOptions = false
     @Environment(\.dismiss) var dismiss
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
     @Environment(\.verticalSizeClass) var verticalSizeClass
@@ -98,29 +99,18 @@ struct EmergencyView: View {
                         .padding(.horizontal, Spacing.xl)
                         .padding(.top, Spacing.lg)
                         
-                        // Emergency Service Button (Rot) - MIT Telefonnummer
+                        // Emergency Service Button (Rot) - OHNE Telefonnummer im Text
                         Button(action: {
-                            let phoneNumber = emergencyPhoneNumber.replacingOccurrences(of: " ", with: "")
-                            if !phoneNumber.isEmpty, let url = URL(string: "tel://\(phoneNumber)") {
-                                UIApplication.shared.open(url)
-                            } else {
-                                print("⚠️ Notfallnummer nicht verfügbar für Land: \(Locale.current.regionCode ?? "unbekannt")")
-                            }
+                            showEmergencyOptions = true
                         }) {
                             HStack(spacing: Spacing.md) {
                                 Image(systemName: "phone.fill")
                                     .font(.system(size: 20))
                                     .foregroundColor(.white)
                                 
-                                if !emergencyPhoneNumber.isEmpty {
-                                    Text("emergency.veterinaryEmergency".localized + ": \(formattedPhoneNumber)")
-                                        .font(.system(size: 17, weight: .semibold))
-                                        .foregroundColor(.white)
-                                } else {
-                                    Text("emergency.veterinaryEmergency".localized)
-                                        .font(.system(size: 17, weight: .semibold))
-                                        .foregroundColor(.white)
-                                }
+                                Text("emergency.veterinaryEmergency".localized)
+                                    .font(.system(size: 17, weight: .semibold))
+                                    .foregroundColor(.white)
                             }
                             .frame(maxWidth: .infinity)
                             .padding(Spacing.lg)
@@ -129,6 +119,25 @@ struct EmergencyView: View {
                         }
                         .buttonStyle(PlainButtonStyle())
                         .padding(.horizontal, Spacing.xl)
+                        .confirmationDialog("emergency.emergencyCall".localized, isPresented: $showEmergencyOptions, titleVisibility: .visible) {
+                            // Anruf-Option
+                            Button("emergency.contactAlert.call".localized + ": \(formattedPhoneNumber)") {
+                                makeEmergencyCall()
+                            }
+                            
+                            // Abbrechen
+                            Button("common.cancel".localized, role: .cancel) {}
+                        } message: {
+                            Text("emergency.contactAlert.message".localized)
+                        }
+                        
+                        // Banner Ad nach "Service d'urgence" Button vor "Catégories d'animaux"
+                        if AdManager.shared.shouldShowBannerAds {
+                            BannerAdView()
+                                .frame(height: 50)
+                                .padding(.horizontal, Spacing.xl)
+                                .padding(.top, Spacing.md)
+                        }
                         
                         // Tierkategorien
                         VStack(alignment: .leading, spacing: Spacing.md) {
@@ -204,6 +213,32 @@ struct EmergencyView: View {
             .fullScreenCover(item: $selectedCategory) { category in
                 EmergencyListView(category: category)
             }
+        }
+    }
+    
+    // Funktion zum Anruf starten
+    private func makeEmergencyCall() {
+        // Telefonnummer für Anruf vorbereiten (alle Leerzeichen, Bindestriche entfernen)
+        var phoneNumber = emergencyPhoneNumber
+            .replacingOccurrences(of: " ", with: "")
+            .replacingOccurrences(of: "-", with: "")
+            .replacingOccurrences(of: "(", with: "")
+            .replacingOccurrences(of: ")", with: "")
+        
+        // Prüfen ob Telefonnummer vorhanden ist
+        if !phoneNumber.isEmpty {
+            // tel: URL erstellen und Anruf starten
+            if let url = URL(string: "tel://\(phoneNumber)") {
+                if UIApplication.shared.canOpenURL(url) {
+                    UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                } else {
+                    print("⚠️ Anruf nicht möglich auf diesem Gerät")
+                }
+            } else {
+                print("⚠️ Ungültige Telefonnummer: \(phoneNumber)")
+            }
+        } else {
+            print("⚠️ Notfallnummer nicht verfügbar für Land: \(Locale.current.regionCode ?? "unbekannt")")
         }
     }
 }

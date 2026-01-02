@@ -6,6 +6,12 @@
 	<string>ca-app-pub-3840959679571598~8015668845</string>
 	<key>NSUserTrackingUsageDescription</key>
 	<string>Wir verwenden Tracking, um Ihnen personalisierte Werbung anzuzeigen und die App zu verbessern.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Wir benötigen Zugriff auf Ihre Kamera, um Fotos von Ihrem Haustier für die Gesundheitsanalyse aufzunehmen.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Wir benötigen Zugriff auf Ihre Fotos, um Bilder Ihres Haustiers für die Gesundheitsanalyse auszuwählen.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Wir benötigen Zugriff, um Fotos Ihres Haustiers in Ihrer Fotobibliothek zu speichern.</string>
 	<key>Privacy - Collected Data Types</key>
 	<array>
 		<dict>
@@ -318,6 +324,18 @@
 		<dict>
 			<key>SKAdNetworkIdentifier</key>
 			<string>3qcr597p9d.skadnetwork</string>
+		</dict>
+		<dict>
+			<key>SKAdNetworkIdentifier</key>
+			<string>9rd3q6mbvq.skadnetwork</string>
+		</dict>
+		<dict>
+			<key>SKAdNetworkIdentifier</key>
+			<string>v79kvwwj4g.skadnetwork</string>
+		</dict>
+		<dict>
+			<key>SKAdNetworkIdentifier</key>
+			<string>v72qych5uu.skadnetwork</string>
 		</dict>
 	</array>
 	<key>ITSAppUsesNonExemptEncryption</key>

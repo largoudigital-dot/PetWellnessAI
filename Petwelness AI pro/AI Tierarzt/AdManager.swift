@@ -490,6 +490,75 @@ class AdManager: NSObject, ObservableObject {
         print("   - Rewarded Ad First Shows: \(rewardedAdFirstShows)")
     }
     
+    // MARK: - Debug Funktion für Interstitial Ads
+    func printInterstitialDebugInfo() {
+        print("🔍 ========== INTERSTITIAL DEBUG INFO ==========")
+        print("   - adsEnabled (lokal): \(adsEnabled)")
+        print("   - adsEnabledRemote (Firebase): \(adsEnabledRemote)")
+        print("   - interstitialEnabled (Firebase): \(interstitialEnabled)")
+        print("   - interstitialAdUnitID: '\(interstitialAdUnitID)'")
+        print("   - interstitialFrequency: \(interstitialFrequency)")
+        print("   - isInterstitialReady: \(isInterstitialReady)")
+        print("   - interstitialAd vorhanden: \(interstitialAd != nil)")
+        print("   - actionButtonClickCount: \(actionButtonClickCount)")
+        print("   - consentManager.canShowAds(): \(consentManager.canShowAds())")
+        print("   - isAdMobInitialized: \(isAdMobInitialized)")
+        
+        // Berechne nächsten Klick wo Ad erscheinen soll
+        let frequency = max(interstitialFrequency, 1)
+        let remainder = actionButtonClickCount % frequency
+        let nextShowAt = remainder == 0 ? actionButtonClickCount + frequency : actionButtonClickCount + (frequency - remainder)
+        print("   - Nächster Interstitial bei Klick #\(nextShowAt)")
+        
+        // Prüfe alle Bedingungen
+        print("   📋 Bedingungen:")
+        print("      - adsEnabled: \(adsEnabled ? "✅" : "❌")")
+        print("      - adsEnabledRemote: \(adsEnabledRemote ? "✅" : "❌")")
+        print("      - interstitialEnabled: \(interstitialEnabled ? "✅" : "❌")")
+        print("      - interstitialAdUnitID nicht leer: \(!interstitialAdUnitID.isEmpty ? "✅" : "❌")")
+        print("      - isInterstitialReady: \(isInterstitialReady ? "✅" : "❌")")
+        print("      - consentManager.canShowAds(): \(consentManager.canShowAds() ? "✅" : "❌")")
+        
+        print("🔍 ============================================")
+    }
+    
+    // MARK: - Refresh Ad Settings (wird aufgerufen wenn Remote Config neu geladen wird)
+    func refreshAdSettings() {
+        print("🔄 Aktualisiere Ad-Einstellungen nach Remote Config Update...")
+        printAdConfig()
+        
+        // Wenn Ads deaktiviert wurden, stoppe das Laden
+        if !adsEnabledRemote {
+            print("⚠️ Ads wurden in Firebase deaktiviert - stoppe Ad-Loading")
+            return
+        }
+        
+        // Wenn Banner deaktiviert wurde, entferne Banner Views
+        if !bannerEnabled {
+            print("⚠️ Banner Ads wurden in Firebase deaktiviert")
+        }
+        
+        // Wenn Interstitial deaktiviert wurde
+        if !interstitialEnabled {
+            print("⚠️ Interstitial Ads wurden in Firebase deaktiviert")
+        }
+        
+        // Wenn Rewarded deaktiviert wurde
+        if !rewardedEnabled {
+            print("⚠️ Rewarded Ads wurden in Firebase deaktiviert")
+        }
+        
+        // Lade Ads neu wenn aktiviert
+        if adsEnabledRemote {
+            if interstitialEnabled {
+                loadInterstitialAd()
+            }
+            if rewardedEnabled {
+                loadRewardedAd()
+            }
+        }
+    }
+    
     // MARK: - App Tracking Transparency (ATT)
     func requestTrackingPermission() {
         // Nur anfragen wenn Consent erteilt wurde
@@ -1314,13 +1383,9 @@ struct BannerAdView: View {
     @State private var showDebugInfo = false
     
     var body: some View {
-        // WICHTIG: Prüfe ob Banner Ads angezeigt werden sollen (inkl. banner_enabled von Firebase)
-        if !adManager.shouldShowBannerAds {
-            // Kein Banner wenn banner_enabled in Firebase false ist
-            EmptyView()
-        } else {
-            #if !canImport(GoogleMobileAds)
-            // Test-Banner wenn Framework nicht verfügbar
+        #if !canImport(GoogleMobileAds)
+        // Test-Banner wenn Framework nicht verfügbar - NUR anzeigen wenn banner_enabled in Firebase true ist
+        if adManager.shouldShowBannerAds {
             ZStack {
                 Rectangle()
                     .fill(
@@ -1350,8 +1415,15 @@ struct BannerAdView: View {
                 print("🔍 BannerAdView: Test-Banner angezeigt (GoogleMobileAds nicht verfügbar)")
                 print("   - shouldShowBannerAds: \(adManager.shouldShowBannerAds)")
                 print("   - bannerEnabled: \(adManager.bannerEnabled)")
+                print("   - adsEnabledRemote: \(adManager.adsEnabledRemote)")
             }
-            #else
+        } else {
+            // Kein Test-Banner wenn banner_enabled in Firebase false ist
+            EmptyView()
+        }
+        #else
+        // Echte Ads - nur anzeigen wenn aktiviert
+        if adManager.shouldShowBannerAds {
             Group {
                 BannerAdViewRepresentable()
                     .onAppear {
@@ -1385,8 +1457,11 @@ struct BannerAdView: View {
                 // Triple-tap für Debug-Info
                 showDebugInfo.toggle()
             }
-            #endif
+        } else {
+            // Kein Banner wenn banner_enabled in Firebase false ist
+            EmptyView()
         }
+        #endif
     }
 }
 

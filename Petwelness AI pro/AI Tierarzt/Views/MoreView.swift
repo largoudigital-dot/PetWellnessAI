@@ -45,6 +45,14 @@ struct MoreView: View {
                         .padding(.horizontal, Spacing.xl)
                         .padding(.top, Spacing.xl)
                         
+                        // Banner Ad unter dem Header
+                        if AdManager.shared.shouldShowBannerAds {
+                            BannerAdView()
+                                .frame(height: 50)
+                                .padding(.horizontal, Spacing.xl)
+                                .padding(.top, Spacing.md)
+                        }
+                        
                         // Features Grid
                         LazyVGrid(columns: [
                             GridItem(.flexible(), spacing: Spacing.md),
@@ -104,7 +112,7 @@ struct MoreView: View {
                         }
                         .padding(.horizontal, Spacing.xl)
                     }
-                    .padding(.bottom, AdManager.shared.shouldShowAds ? 100 : 50) // Space for navigation bar + banner ad
+                    .padding(.bottom, 50) // Platz für navigation bar
                 }
         }
         .fullScreenCover(item: $selectedFeature) { feature in

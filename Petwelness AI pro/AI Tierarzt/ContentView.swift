@@ -12,6 +12,7 @@ struct ContentView: View {
     @StateObject private var petManager = PetManager()
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
     @Environment(\.verticalSizeClass) var verticalSizeClass
+    @Environment(\.scenePhase) private var scenePhase
     
     var isIPad: Bool {
         horizontalSizeClass == .regular && verticalSizeClass == .regular
@@ -46,25 +47,24 @@ struct ContentView: View {
                     UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
                 }
             }
+            .onChange(of: scenePhase) { newPhase in
+                // Lade Remote Config neu wenn App wieder aktiv wird
+                if newPhase == .active {
+                    print("🔄 App ist aktiv - lade Remote Config sofort neu...")
+                    FirebaseManager.shared.fetchRemoteConfig { success in
+                        if success {
+                            print("✅ Remote Config neu geladen - Änderungen sind jetzt aktiv")
+                            // Informiere AdManager über Änderungen
+                            AdManager.shared.refreshAdSettings()
+                        }
+                    }
+                }
+            }
             
-            // Banner Ad über der Navigation Bar (nur zeigen wenn Tab Bar sichtbar)
-            // WICHTIG: Banner Ad soll IMMER über der Navigation Bar erscheinen, wenn aktiviert
+            // Navigation Bar (ohne Banner Ad - Banner Ads sind jetzt in den einzelnen Views)
             if appState.isTabBarVisible {
                 VStack(spacing: 0) {
                     Spacer()
-                    
-                    // Banner Ad - IMMER anzeigen wenn Tab Bar sichtbar ist UND Banner Ads aktiviert sind
-                    if AdManager.shared.shouldShowBannerAds {
-                        BannerAdView()
-                            .frame(height: 50)
-                            .background(Color.backgroundPrimary)
-                            .onAppear {
-                                print("🔍 ContentView: Banner Ad wird angezeigt über Navigation Bar")
-                                print("   - shouldShowBannerAds: \(AdManager.shared.shouldShowBannerAds)")
-                                print("   - bannerEnabled: \(AdManager.shared.bannerEnabled)")
-                                print("   - isTabBarVisible: \(appState.isTabBarVisible)")
-                            }
-                    }
                     
                     // Navigation Bar
                     BottomNavigationBar(selectedTab: $appState.selectedTab)
@@ -73,7 +73,7 @@ struct ContentView: View {
                 .ignoresSafeArea(.keyboard, edges: .bottom)
                 .transition(.move(edge: .bottom).combined(with: .opacity))
                 .allowsHitTesting(true)
-                .zIndex(1000) // Sehr hoher zIndex, damit Banner über allen anderen Views ist
+                .zIndex(1000)
             }
         }
         .overlay {

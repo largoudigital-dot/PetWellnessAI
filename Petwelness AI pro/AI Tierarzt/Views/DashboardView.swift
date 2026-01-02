@@ -61,6 +61,13 @@ struct DashboardView: View {
                             // Health Score Card
                             healthScoreCard
                             
+                            // Banner Ad zwischen Score de santé und Tracking-Karten
+                            if AdManager.shared.shouldShowBannerAds {
+                                BannerAdView()
+                                    .frame(height: 50)
+                                    .padding(.vertical, Spacing.sm)
+                            }
+                            
                             // Quick Stats
                             quickStatsGrid
                             
@@ -77,14 +84,6 @@ struct DashboardView: View {
                         .padding(.bottom, Spacing.xxl)
                     }
                 }
-            }
-        }
-        .safeAreaInset(edge: .bottom) {
-            // Banner Ad am unteren Rand (über Safe Area)
-            if AdManager.shared.shouldShowBannerAds {
-                BannerAdView()
-                    .frame(height: 50)
-                    .background(Color.backgroundPrimary)
             }
         }
     }

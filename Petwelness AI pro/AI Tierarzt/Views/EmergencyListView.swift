@@ -39,13 +39,20 @@ struct EmergencyListView: View {
                     VStack(spacing: Spacing.lg) {
                         // Notfälle
                         VStack(spacing: Spacing.lg) {
-                            ForEach(category.emergencies) { emergency in
+                            ForEach(Array(category.emergencies.enumerated()), id: \.element.id) { index, emergency in
                                 Button(action: {
                                     selectedEmergency = emergency
                                 }) {
                                     EmergencyCard(emergency: emergency)
                                 }
                                 .buttonStyle(PlainButtonStyle())
+                                
+                                // Banner Ad nach der ersten Karte
+                                if index == 0 && AdManager.shared.shouldShowBannerAds {
+                                    BannerAdView()
+                                        .frame(height: 50)
+                                        .padding(.vertical, Spacing.sm)
+                                }
                             }
                         }
                         .padding(.horizontal, Spacing.xl)
@@ -53,14 +60,6 @@ struct EmergencyListView: View {
                     }
                     .padding(.bottom, Spacing.xl)
                 }
-            }
-        }
-        .safeAreaInset(edge: .bottom) {
-            // Banner Ad am unteren Rand (über Safe Area)
-            if AdManager.shared.shouldShowBannerAds {
-                BannerAdView()
-                    .frame(height: 50)
-                    .background(Color.backgroundPrimary)
             }
         }
         .fullScreenCover(item: $selectedEmergency) { emergency in

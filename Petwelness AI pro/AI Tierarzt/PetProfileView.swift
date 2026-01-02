@@ -450,6 +450,13 @@ struct PetProfileView: View {
                 .foregroundColor(.textPrimary)
                 .padding(.top, Spacing.md)
             
+            // Banner Ad zwischen "Dossier de santé" Header und "Médicaments"
+            if AdManager.shared.shouldShowBannerAds {
+                BannerAdView()
+                    .frame(height: 50)
+                    .padding(.vertical, Spacing.sm)
+            }
+            
             VStack(spacing: Spacing.xs) {
                 let medications = healthRecordManager.getMedications(for: pet.id)
                 let activeMedications = medications.filter { $0.isActive }
@@ -460,13 +467,6 @@ struct PetProfileView: View {
                     subtitle: activeMedications.isEmpty ? "petProfile.noCurrentMedications".localized : "\(activeMedications.count) " + (activeMedications.count == 1 ? "medications.active".localized : "medications.active".localized)
                 ) {
                     showMedications = true
-                }
-                
-                // Banner Ad nach Medicamentos
-                if AdManager.shared.shouldShowBannerAds {
-                    BannerAdView()
-                        .frame(height: 50)
-                        .padding(.vertical, Spacing.sm)
                 }
                 
                 let vaccinations = healthRecordManager.getVaccinations(for: pet.id)

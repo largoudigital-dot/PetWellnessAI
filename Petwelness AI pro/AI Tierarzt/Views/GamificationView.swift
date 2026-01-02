@@ -51,6 +51,14 @@ struct GamificationView: View {
                     // Current Stats
                     currentStatsCard
                     
+                    // Banner Ad unter "Votre progression" Box vor "Succès" Liste
+                    if AdManager.shared.shouldShowBannerAds {
+                        BannerAdView()
+                            .frame(height: 50)
+                            .padding(.horizontal, Spacing.xl)
+                            .padding(.vertical, Spacing.md)
+                    }
+                    
                     // Features
                     VStack(spacing: Spacing.lg) {
                                 NavigationLink(destination: AchievementsView()) {
@@ -93,14 +101,6 @@ struct GamificationView: View {
                         }
                         .padding(.bottom, Spacing.xxl)
                     }
-                }
-            }
-            .safeAreaInset(edge: .bottom) {
-                // Banner Ad am unteren Rand (über Safe Area)
-                if AdManager.shared.shouldShowBannerAds {
-                    BannerAdView()
-                        .frame(height: 50)
-                        .background(Color.backgroundPrimary)
                 }
             }
             .navigationBarHidden(true)

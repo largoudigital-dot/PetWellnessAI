@@ -67,6 +67,14 @@ struct PetFirstAidHomeView: View {
                         .buttonStyle(PlainButtonStyle())
                         .padding(.horizontal, Spacing.xl)
                         
+                        // Banner Ad unter dem Service d'Urgence Button
+                        if AdManager.shared.shouldShowBannerAds {
+                            BannerAdView()
+                                .frame(height: 50)
+                                .padding(.horizontal, Spacing.xl)
+                                .padding(.top, Spacing.sm)
+                        }
+                        
                         // Kategorien
                         VStack(alignment: .leading, spacing: Spacing.md) {
                             Text("firstAid.categories".localized)
@@ -84,7 +92,7 @@ struct PetFirstAidHomeView: View {
                             }
                             .padding(.horizontal, Spacing.xl)
                         }
-                        .padding(.bottom, Spacing.xl)
+                        .padding(.bottom, 50) // Platz für navigation bar
                     }
                 }
         }

@@ -53,7 +53,7 @@ struct HomeView: View {
                     }
                     .padding(.horizontal, Spacing.xl)
                 .padding(.top, Spacing.md)
-                .padding(.bottom, AdManager.shared.shouldShowAds ? 140 : 50) // Genug Platz für navigation bar (37px) + banner ad (50px) + extra Sicherheitsabstand
+                .padding(.bottom, 100) // Genug Platz für navigation bar (37px) + Safe Area + extra Sicherheitsabstand
                 }
             }
             .ignoresSafeArea(.container, edges: .bottom)
@@ -290,6 +290,14 @@ struct HomeView: View {
                 RoundedRectangle(cornerRadius: 16)
                     .fill(Color.backgroundSecondary)
             )
+            
+            // Banner Ad zwischen Score de santé und Tracking-Karten
+            if AdManager.shared.shouldShowBannerAds {
+                BannerAdView()
+                    .frame(height: 50)
+                    .padding(.horizontal, Spacing.xl)
+                    .padding(.vertical, Spacing.sm)
+            }
             
             // Quick Stats - Horizontal Row
             HStack(spacing: Spacing.xs) {

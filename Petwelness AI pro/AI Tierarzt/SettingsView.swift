@@ -59,6 +59,14 @@ struct SettingsView: View {
                     .padding(.horizontal, Spacing.xl)
                     .padding(.top, Spacing.md)
                     
+                    // Banner Ad am oberen Bildrand (unter "Paramètres")
+                    if AdManager.shared.shouldShowBannerAds {
+                        BannerAdView()
+                            .frame(height: 50)
+                            .padding(.horizontal, Spacing.xl)
+                            .padding(.top, Spacing.md)
+                    }
+                    
                         // Darstellung / Appearance
                         VStack(alignment: .leading, spacing: Spacing.lg) {
                             Text("settings.appearance".localized)
@@ -375,25 +383,6 @@ struct SettingsView: View {
                                         .labelsHidden()
                                         .tint(.green)
                                     
-                                    // Test-Button für Benachrichtigungen
-                                    if notificationsEnabled && NotificationManager.shared.isAuthorized {
-                                        Button(action: {
-                                            print("🧪 Test-Benachrichtigung wird geplant...")
-                                            NotificationManager.shared.scheduleTestNotification(inSeconds: 5)
-                                        }) {
-                                            HStack {
-                                                Image(systemName: "bell.badge")
-                                                Text("Test (5s)")
-                                            }
-                                            .font(.system(size: 12))
-                                            .foregroundColor(.blue)
-                                            .padding(.horizontal, 8)
-                                            .padding(.vertical, 4)
-                                            .background(Color.blue.opacity(0.1))
-                                            .cornerRadius(6)
-                                        }
-                                        .padding(.leading, Spacing.sm)
-                                    }
                                 }
                                 .padding(Spacing.lg)
                                 
@@ -411,13 +400,6 @@ struct SettingsView: View {
                                             .id(localizationManager.currentLanguage)
                                             .font(.bodyTextBold)
                                             .foregroundColor(.textPrimary)
-                                        
-                                        #if targetEnvironment(simulator)
-                                        Text("⚠️ Benachrichtigungen funktionieren im Simulator nicht zuverlässig. Bitte teste auf einem echten Gerät.")
-                                            .font(.caption)
-                                            .foregroundColor(.orange)
-                                            .padding(.top, 4)
-                                        #endif
                                         
                                         Text("settings.activateNotificationsInSettings".localized)
                                             .id(localizationManager.currentLanguage)
@@ -535,7 +517,7 @@ struct SettingsView: View {
                             }
                             .padding(.horizontal, Spacing.xl)
                         }
-                        .padding(.bottom, AdManager.shared.shouldShowAds ? 100 : Spacing.xl) // Space for navigation bar + banner ad
+                        .padding(.bottom, 50) // Platz für navigation bar
                     }
                 }
         }
