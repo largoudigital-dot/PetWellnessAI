@@ -9,7 +9,18 @@ import SwiftUI
 
 struct MoreView: View {
     @EnvironmentObject var localizationManager: LocalizationManager
+    @Environment(\.horizontalSizeClass) var horizontalSizeClass
+    @Environment(\.verticalSizeClass) var verticalSizeClass
     @State private var selectedFeature: MoreFeature?
+    
+    var isIPad: Bool {
+        horizontalSizeClass == .regular && verticalSizeClass == .regular
+    }
+    
+    // Adaptive sizes for iPad
+    private var headerHeight: CGFloat { isIPad ? 220 : 160 }
+    private var headerIconSize: CGFloat { isIPad ? 65 : 45 }
+    private var maxContentWidth: CGFloat { isIPad ? 1000 : .infinity }
     
     var body: some View {
         ZStack {
@@ -17,7 +28,7 @@ struct MoreView: View {
             PawPrintBackground(opacity: 0.036, size: 45, spacing: 90)
             
             ScrollView {
-                VStack(spacing: Spacing.xl) {
+                VStack(spacing: isIPad ? Spacing.xxl : Spacing.xl) {
                         // Header mit Gradient
                         ZStack {
                             LinearGradient(
@@ -25,39 +36,39 @@ struct MoreView: View {
                                 startPoint: .topLeading,
                                 endPoint: .bottomTrailing
                             )
-                            .frame(height: 160)
-                            .cornerRadius(CornerRadius.large)
+                            .frame(height: headerHeight)
+                            .cornerRadius(isIPad ? CornerRadius.xlarge : CornerRadius.large)
                             
-                            VStack(spacing: Spacing.sm) {
+                            VStack(spacing: isIPad ? Spacing.md : Spacing.sm) {
                                 Image(systemName: "square.grid.2x2.fill")
-                                    .font(.system(size: 45))
+                                    .font(.system(size: headerIconSize))
                                     .foregroundColor(.brandPrimary)
                                 
                                 Text("more.title".localized)
-                                    .font(.appTitle)
+                                    .font(.system(size: isIPad ? 42 : 36, weight: .bold, design: .rounded))
                                     .foregroundColor(.textPrimary)
                                 
                                 Text("more.subtitle".localized)
-                                    .font(.bodyText)
+                                    .font(.system(size: isIPad ? 20 : 16))
                                     .foregroundColor(.textSecondary)
                             }
                         }
-                        .padding(.horizontal, Spacing.xl)
-                        .padding(.top, Spacing.xl)
+                        .padding(.horizontal, isIPad ? Spacing.xxxl : Spacing.xl)
+                        .padding(.top, isIPad ? Spacing.xxl : Spacing.xl)
                         
                         // Banner Ad unter dem Header
                         if AdManager.shared.shouldShowBannerAds {
                             BannerAdView()
                                 .frame(height: 50)
-                                .padding(.horizontal, Spacing.xl)
-                                .padding(.top, Spacing.md)
+                                .padding(.horizontal, isIPad ? Spacing.xxxl : Spacing.xl)
+                                .padding(.top, isIPad ? Spacing.lg : Spacing.md)
                         }
                         
                         // Features Grid
                         LazyVGrid(columns: [
-                            GridItem(.flexible(), spacing: Spacing.md),
-                            GridItem(.flexible(), spacing: Spacing.md)
-                        ], spacing: Spacing.md) {
+                            GridItem(.flexible(), spacing: isIPad ? Spacing.lg : Spacing.md),
+                            GridItem(.flexible(), spacing: isIPad ? Spacing.lg : Spacing.md)
+                        ], spacing: isIPad ? Spacing.lg : Spacing.md) {
                             // Intelligente Dashboards
                             Button(action: {
                                 selectedFeature = .dashboards

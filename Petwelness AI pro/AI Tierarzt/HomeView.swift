@@ -14,6 +14,8 @@ struct HomeView: View {
     @StateObject private var healthRecordManager = HealthRecordManager()
     @EnvironmentObject var localizationManager: LocalizationManager
     @EnvironmentObject var appState: AppState
+    @Environment(\.horizontalSizeClass) var horizontalSizeClass
+    @Environment(\.verticalSizeClass) var verticalSizeClass
     @AppStorage("colorSchemeMode") private var colorSchemeMode = "light" // Standard: Light Mode
     @AppStorage("autoModeEnabled") private var autoModeEnabled = true
     @State private var showAddPet = false
@@ -28,6 +30,17 @@ struct HomeView: View {
     @State private var selectedAppointment: Appointment? = nil
     @State private var selectedVaccination: Vaccination? = nil
     
+    var isIPad: Bool {
+        horizontalSizeClass == .regular && verticalSizeClass == .regular
+    }
+    
+    // Adaptive sizes for iPad
+    private var heroHeight: CGFloat { isIPad ? 160 : 112 }
+    private var appNameSize: CGFloat { isIPad ? 34 : 23 }
+    private var taglineSize: CGFloat { isIPad ? 16 : 10 }
+    private var sectionTitleSize: CGFloat { isIPad ? 24 : 20 }
+    private var maxContentWidth: CGFloat { isIPad ? 1000 : .infinity }
+    
     var pets: [Pet] {
         petManager.pets
     }
@@ -38,7 +51,7 @@ struct HomeView: View {
                 PawPrintBackground(opacity: 0.036, size: 45, spacing: 90)
                 
                 ScrollView {
-                VStack(spacing: Spacing.lg) {
+                VStack(spacing: isIPad ? Spacing.xl : Spacing.lg) {
                         // Hero Section with Gradient
                         heroSectionView
                     
@@ -51,9 +64,11 @@ struct HomeView: View {
                         // Pets Section
                         petsSectionView
                     }
-                    .padding(.horizontal, Spacing.xl)
-                .padding(.top, Spacing.md)
-                .padding(.bottom, 100) // Genug Platz für navigation bar (37px) + Safe Area + extra Sicherheitsabstand
+                    .padding(.horizontal, isIPad ? Spacing.xxxl : Spacing.xl)
+                .padding(.top, isIPad ? Spacing.lg : Spacing.md)
+                .padding(.bottom, isIPad ? 120 : 100) // Genug Platz für navigation bar + Safe Area
+                    .frame(maxWidth: maxContentWidth)
+                    .frame(maxWidth: .infinity)
                 }
             }
             .ignoresSafeArea(.container, edges: .bottom)
@@ -190,29 +205,29 @@ struct HomeView: View {
         VStack(spacing: 0) {
             ZStack {
                 BrandGradient()
-                    .frame(height: 112)
-                    .cornerRadius(CornerRadius.large)
+                    .frame(height: heroHeight)
+                    .cornerRadius(isIPad ? CornerRadius.xlarge : CornerRadius.large)
                 
                 // Paw Pattern Overlay
                 HStack {
                     Spacer()
                     Image(systemName: "pawprint.fill")
-                        .font(.system(size: 84))
+                        .font(.system(size: isIPad ? 120 : 84))
                         .foregroundColor(.white.opacity(0.1))
-                        .offset(x: 22, y: 22)
+                        .offset(x: isIPad ? 30 : 22, y: isIPad ? 30 : 22)
                         .rotationEffect(.degrees(-15))
                 }
                 .clipped()
                 
                 VStack(spacing: Spacing.xs) {
                     HStack {
-                        VStack(alignment: .leading, spacing: 3) {
+                        VStack(alignment: .leading, spacing: isIPad ? 6 : 3) {
                             Text("app.name".localized)
-                                .font(.system(size: 23, weight: .bold, design: .rounded))
+                                .font(.system(size: appNameSize, weight: .bold, design: .rounded))
                                 .foregroundColor(.white)
                             
                             Text("app.tagline".localized)
-                                .font(.system(size: 10, weight: .medium))
+                                .font(.system(size: taglineSize, weight: .medium))
                                 .foregroundColor(.white.opacity(0.95))
                                 .lineLimit(2)
                         }
@@ -235,7 +250,7 @@ struct HomeView: View {
                             )
                         )
                     }
-                    .padding(Spacing.md)
+                    .padding(isIPad ? Spacing.lg : Spacing.md)
                 }
             }
         }
@@ -248,31 +263,31 @@ struct HomeView: View {
             let healthScore = calculateHealthScore()
             let progress = Double(healthScore) / 100.0
             
-            VStack(spacing: Spacing.sm) {
+            VStack(spacing: isIPad ? Spacing.md : Spacing.sm) {
                 HStack(alignment: .center) {
                     Image(systemName: "heart.text.square.fill")
-                        .font(.system(size: 18))
+                        .font(.system(size: isIPad ? 26 : 18))
                         .foregroundColor(.accentRed)
                     
                     Text("health.score".localized)
-                        .font(.system(size: 15, weight: .semibold))
+                        .font(.system(size: isIPad ? 22 : 15, weight: .semibold))
                         .foregroundColor(.textPrimary)
                     
                     Spacer()
                     
                     Text("\(healthScore)")
-                        .font(.system(size: 22, weight: .bold))
+                        .font(.system(size: isIPad ? 32 : 22, weight: .bold))
                         .foregroundColor(.accentRed)
                 }
                 
                 // Progress Bar
                 GeometryReader { geometry in
                     ZStack(alignment: .leading) {
-                        RoundedRectangle(cornerRadius: 4)
+                        RoundedRectangle(cornerRadius: isIPad ? 6 : 4)
                             .fill(Color.accentRed.opacity(0.2))
-                            .frame(height: 6)
+                            .frame(height: isIPad ? 8 : 6)
                         
-                        RoundedRectangle(cornerRadius: 4)
+                        RoundedRectangle(cornerRadius: isIPad ? 6 : 4)
                             .fill(
                                 LinearGradient(
                                     colors: [Color.accentRed, Color.accentOrange],
@@ -280,14 +295,14 @@ struct HomeView: View {
                                     endPoint: .trailing
                                 )
                             )
-                            .frame(width: geometry.size.width * progress, height: 6)
+                            .frame(width: geometry.size.width * progress, height: isIPad ? 8 : 6)
                     }
                 }
-                .frame(height: 6)
+                .frame(height: isIPad ? 8 : 6)
             }
-            .padding(Spacing.md)
+            .padding(isIPad ? Spacing.lg : Spacing.md)
             .background(
-                RoundedRectangle(cornerRadius: 16)
+                RoundedRectangle(cornerRadius: isIPad ? CornerRadius.large : 16)
                     .fill(Color.backgroundSecondary)
             )
             
@@ -426,11 +441,11 @@ struct HomeView: View {
     
     // MARK: - Quick Actions
     private var quickActionsView: some View {
-        VStack(spacing: Spacing.sm) {
+        VStack(spacing: isIPad ? Spacing.md : Spacing.sm) {
             LazyVGrid(columns: [
-                GridItem(.flexible(), spacing: Spacing.sm),
-                GridItem(.flexible(), spacing: Spacing.sm)
-            ], spacing: Spacing.sm) {
+                GridItem(.flexible(), spacing: isIPad ? Spacing.md : Spacing.sm),
+                GridItem(.flexible(), spacing: isIPad ? Spacing.md : Spacing.sm)
+            ], spacing: isIPad ? Spacing.md : Spacing.sm) {
                 // Symptome eingeben
                 QuickActionCard(
                     icon: "stethoscope",
@@ -483,26 +498,26 @@ struct HomeView: View {
     
     // MARK: - Pets Section
     private var petsSectionView: some View {
-        VStack(alignment: .leading, spacing: Spacing.lg) {
+        VStack(alignment: .leading, spacing: isIPad ? Spacing.xl : Spacing.lg) {
             HStack {
                 Text("pets.myPets".localized)
-                    .font(.sectionTitle)
+                    .font(.system(size: sectionTitleSize, weight: .semibold, design: .rounded))
                     .foregroundColor(.textPrimary)
                 
                 Spacer()
                 
                 // Action Buttons
-                HStack(spacing: Spacing.sm) {
+                HStack(spacing: isIPad ? Spacing.md : Spacing.sm) {
                     Button(action: {
                         showAddPet = true
                     }) {
                         Image(systemName: "plus")
-                            .font(.system(size: 16, weight: .semibold))
+                            .font(.system(size: isIPad ? 22 : 16, weight: .semibold))
                             .foregroundColor(.white)
-                            .frame(width: 36, height: 36)
+                            .frame(width: isIPad ? 50 : 36, height: isIPad ? 50 : 36)
                             .background(LinearGradient.brand)
-                            .cornerRadius(CornerRadius.small)
-                            .shadow(color: Color.black.opacity(0.15), radius: 4, x: 0, y: 2)
+                            .cornerRadius(isIPad ? CornerRadius.medium : CornerRadius.small)
+                            .shadow(color: Color.black.opacity(0.15), radius: isIPad ? 6 : 4, x: 0, y: 2)
                     }
                 }
             }

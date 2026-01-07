@@ -12,6 +12,22 @@ struct PetFirstAidHomeView: View {
     @State private var selectedCategory: PetCategory?
     @State private var selectedEmergency: Emergency?
     @Environment(\.colorScheme) var colorScheme
+    @Environment(\.horizontalSizeClass) var horizontalSizeClass
+    @Environment(\.verticalSizeClass) var verticalSizeClass
+    
+    var isIPad: Bool {
+        horizontalSizeClass == .regular && verticalSizeClass == .regular
+    }
+    
+    // Adaptive sizes for iPad
+    private var headerHeight: CGFloat { isIPad ? 240 : 180 }
+    private var headerIconSize: CGFloat { isIPad ? 70 : 50 }
+    private var headerTitleSize: CGFloat { isIPad ? 32 : 24 }
+    private var headerSubtitleSize: CGFloat { isIPad ? 22 : 16 }
+    private var buttonHeight: CGFloat { isIPad ? 70 : 56 }
+    private var buttonTextSize: CGFloat { isIPad ? 24 : 17 }
+    private var buttonIconSize: CGFloat { isIPad ? 28 : 20 }
+    private var maxContentWidth: CGFloat { isIPad ? 1000 : .infinity }
     
     var body: some View {
         ZStack {
@@ -19,29 +35,29 @@ struct PetFirstAidHomeView: View {
                 .ignoresSafeArea()
             
             ScrollView {
-                VStack(spacing: Spacing.xl) {
+                VStack(spacing: isIPad ? Spacing.xxl : Spacing.xl) {
                         // Header Card mit hellem rosa Hintergrund (Dark Mode angepasst)
                         ZStack {
-                            RoundedRectangle(cornerRadius: CornerRadius.large)
+                            RoundedRectangle(cornerRadius: isIPad ? CornerRadius.xlarge : CornerRadius.large)
                                 .fill(colorScheme == .dark ? Color(red: 0.3, green: 0.2, blue: 0.2) : Color(red: 1.0, green: 0.9, blue: 0.9))
-                                .frame(height: 180)
+                                .frame(height: headerHeight)
                             
-                            VStack(spacing: Spacing.md) {
+                            VStack(spacing: isIPad ? Spacing.lg : Spacing.md) {
                                 Image(systemName: "cross.case.fill")
-                                    .font(.system(size: 50))
+                                    .font(.system(size: headerIconSize))
                                     .foregroundColor(.accentRed)
                                 
                                 Text("firstAid.title".localized)
-                                    .font(.system(size: 24, weight: .bold))
+                                    .font(.system(size: headerTitleSize, weight: .bold))
                                     .foregroundColor(.textPrimary)
                                 
                                 Text("firstAid.subtitle".localized)
-                                    .font(.system(size: 16))
+                                    .font(.system(size: headerSubtitleSize))
                                     .foregroundColor(.textSecondary)
                             }
                         }
-                        .padding(.horizontal, Spacing.xl)
-                        .padding(.top, Spacing.xl)
+                        .padding(.horizontal, isIPad ? Spacing.xxxl : Spacing.xl)
+                        .padding(.top, isIPad ? Spacing.xxl : Spacing.xl)
                         
                         // Notfall-Kontakt Button
                         Button(action: {
@@ -49,23 +65,24 @@ struct PetFirstAidHomeView: View {
                                 UIApplication.shared.open(url)
                             }
                         }) {
-                            HStack(spacing: Spacing.md) {
+                            HStack(spacing: isIPad ? Spacing.lg : Spacing.md) {
                                 Image(systemName: "phone.fill")
-                                    .font(.system(size: 20))
+                                    .font(.system(size: buttonIconSize))
                                     .foregroundColor(.white)
                                 
                                 Text("emergency.service".localized)
-                                    .font(.system(size: 17, weight: .bold))
+                                    .font(.system(size: buttonTextSize, weight: .bold))
                                     .foregroundColor(.white)
                             }
                             .frame(maxWidth: .infinity)
-                            .padding(Spacing.lg)
+                            .frame(height: buttonHeight)
+                            .padding(.horizontal, isIPad ? Spacing.xl : Spacing.lg)
                             .background(Color.accentRed)
-                            .cornerRadius(CornerRadius.large)
-                            .shadow(color: Color.black.opacity(0.2), radius: 8, x: 0, y: 4)
+                            .cornerRadius(isIPad ? CornerRadius.xlarge : CornerRadius.large)
+                            .shadow(color: Color.black.opacity(0.2), radius: isIPad ? 12 : 8, x: 0, y: 4)
                         }
                         .buttonStyle(PlainButtonStyle())
-                        .padding(.horizontal, Spacing.xl)
+                        .padding(.horizontal, isIPad ? Spacing.xxxl : Spacing.xl)
                         
                         // Banner Ad unter dem Service d'Urgence Button
                         if AdManager.shared.shouldShowBannerAds {
@@ -76,11 +93,11 @@ struct PetFirstAidHomeView: View {
                         }
                         
                         // Kategorien
-                        VStack(alignment: .leading, spacing: Spacing.md) {
+                        VStack(alignment: .leading, spacing: isIPad ? Spacing.lg : Spacing.md) {
                             Text("firstAid.categories".localized)
-                                .font(.sectionTitle)
+                                .font(.system(size: isIPad ? 28 : 20, weight: .semibold, design: .rounded))
                                 .foregroundColor(.textPrimary)
-                                .padding(.horizontal, Spacing.xl)
+                                .padding(.horizontal, isIPad ? Spacing.xxxl : Spacing.xl)
                             
                             ForEach(viewModel.filteredCategories) { category in
                                 Button(action: {
@@ -90,9 +107,11 @@ struct PetFirstAidHomeView: View {
                                 }
                                 .buttonStyle(PlainButtonStyle())
                             }
-                            .padding(.horizontal, Spacing.xl)
+                            .padding(.horizontal, isIPad ? Spacing.xxxl : Spacing.xl)
                         }
-                        .padding(.bottom, 50) // Platz für navigation bar
+                        .padding(.bottom, isIPad ? 70 : 50) // Platz für navigation bar
+                        .frame(maxWidth: maxContentWidth)
+                        .frame(maxWidth: .infinity)
                     }
                 }
         }

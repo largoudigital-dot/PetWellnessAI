@@ -63,10 +63,10 @@ struct ChatView: View {
                     if isPresentedAsSheet {
                         Button(action: { dismiss() }) {
                             Image(systemName: "xmark")
-                                .font(.system(size: 16))
+                                .font(.system(size: isIPad ? 22 : 16))
                                 .foregroundColor(.brandPrimary)
                         }
-                        .frame(width: 32, height: 32)
+                        .frame(width: isIPad ? 44 : 32, height: isIPad ? 44 : 32)
                     } else {
                         Color.clear
                             .frame(width: 16)
@@ -81,23 +81,24 @@ struct ChatView: View {
                                     endPoint: .bottomTrailing
                                 )
                             )
-                            .frame(width: 36, height: 36)
+                            .frame(width: isIPad ? 50 : 36, height: isIPad ? 50 : 36)
                         
                         Text("AI")
-                            .font(.system(size: 14, weight: .bold))
+                            .font(.system(size: isIPad ? 20 : 14, weight: .bold))
                             .foregroundColor(.white)
                     }
                     
-                    VStack(alignment: .leading, spacing: 1) {
+                    VStack(alignment: .leading, spacing: isIPad ? 3 : 1) {
                         Text("chat.aiVet".localized)
-                            .font(.system(size: 16, weight: .semibold))
+                            .font(.system(size: isIPad ? 24 : 16, weight: .semibold))
                             .foregroundColor(.textPrimary)
                         
-                        HStack(spacing: 4) {
+                        HStack(spacing: isIPad ? 6 : 4) {
                             Circle()
                                 .fill(Color.accentGreen)
-                                .frame(width: 6, height: 6)
+                                .frame(width: isIPad ? 8 : 6, height: isIPad ? 8 : 6)
                             Text("chat.online".localized)
+                                .font(.system(size: isIPad ? 18 : 12))
                                 .font(.system(size: 11))
                                 .foregroundColor(.textSecondary)
                         }
@@ -110,15 +111,15 @@ struct ChatView: View {
                         showDeleteConfirmation = true
                     }) {
                         Image(systemName: "trash")
-                            .font(.system(size: 18))
+                            .font(.system(size: isIPad ? 24 : 18))
                             .foregroundColor(.textSecondary)
                     }
-                    .frame(width: 44, height: 44)
+                    .frame(width: isIPad ? 56 : 44, height: isIPad ? 56 : 44)
                     .contentShape(Rectangle())
                     .buttonStyle(PlainButtonStyle())
                 }
-                .frame(height: 50)
-                .padding(.horizontal, Spacing.md)
+                .frame(height: isIPad ? 70 : 50)
+                .padding(.horizontal, isIPad ? Spacing.lg : Spacing.md)
                 .background(Color.backgroundSecondary)
                 
                 Divider()
