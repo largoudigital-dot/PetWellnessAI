@@ -1,0 +1,6 @@
+/* Privacy Permission Descriptions - 한국어 */
+NSUserTrackingUsageDescription = "개인화된 광고를 표시하고 앱을 개선하기 위해 추적을 사용합니다.";
+NSCameraUsageDescription = "반려동물의 건강 분석을 위해 사진을 촬영하려면 카메라 액세스가 필요합니다.";
+NSPhotoLibraryUsageDescription = "반려동물의 건강 분석을 위해 이미지를 선택하려면 사진 액세스가 필요합니다.";
+NSPhotoLibraryAddUsageDescription = "반려동물의 사진을 사진 라이브러리에 저장하려면 액세스가 필요합니다.";
+

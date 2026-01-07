@@ -5,13 +5,13 @@
 	<key>GADApplicationIdentifier</key>
 	<string>ca-app-pub-3840959679571598~8015668845</string>
 	<key>NSUserTrackingUsageDescription</key>
-	<string>Wir verwenden Tracking, um Ihnen personalisierte Werbung anzuzeigen und die App zu verbessern.</string>
+	<string>We use tracking to show you personalized ads and improve the app.</string>
 	<key>NSCameraUsageDescription</key>
-	<string>Wir benötigen Zugriff auf Ihre Kamera, um Fotos von Ihrem Haustier für die Gesundheitsanalyse aufzunehmen.</string>
+	<string>We need access to your camera to take photos of your pet for health analysis.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Wir benötigen Zugriff auf Ihre Fotos, um Bilder Ihres Haustiers für die Gesundheitsanalyse auszuwählen.</string>
+	<string>We need access to your photos to select images of your pet for health analysis.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>Wir benötigen Zugriff, um Fotos Ihres Haustiers in Ihrer Fotobibliothek zu speichern.</string>
+	<string>We need access to save photos of your pet to your photo library.</string>
 	<key>Privacy - Collected Data Types</key>
 	<array>
 		<dict>

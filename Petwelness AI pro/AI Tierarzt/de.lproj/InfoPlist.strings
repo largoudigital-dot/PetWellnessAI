@@ -1,0 +1,6 @@
+/* Privacy Permission Descriptions - Deutsch */
+NSUserTrackingUsageDescription = "Wir verwenden Tracking, um Ihnen personalisierte Werbung anzuzeigen und die App zu verbessern.";
+NSCameraUsageDescription = "Wir benötigen Zugriff auf Ihre Kamera, um Fotos von Ihrem Haustier für die Gesundheitsanalyse aufzunehmen.";
+NSPhotoLibraryUsageDescription = "Wir benötigen Zugriff auf Ihre Fotos, um Bilder Ihres Haustiers für die Gesundheitsanalyse auszuwählen.";
+NSPhotoLibraryAddUsageDescription = "Wir benötigen Zugriff, um Fotos Ihres Haustiers in Ihrer Fotobibliothek zu speichern.";
+

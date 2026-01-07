@@ -170,3 +170,4 @@ func incrementChatMessageCount() {
 
 Die Häufigkeit wird über Firebase Remote Config gesteuert, sodass du die Frequenz jederzeit anpassen kannst, ohne die App zu aktualisieren.
 
+

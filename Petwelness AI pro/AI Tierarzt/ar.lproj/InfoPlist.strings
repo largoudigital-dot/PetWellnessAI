@@ -1,0 +1,6 @@
+/* Privacy Permission Descriptions - العربية */
+NSUserTrackingUsageDescription = "نستخدم التتبع لعرض إعلانات مخصصة وتحسين التطبيق.";
+NSCameraUsageDescription = "نحتاج إلى الوصول إلى الكاميرا لالتقاط صور لحيوانك الأليف لتحليل الصحة.";
+NSPhotoLibraryUsageDescription = "نحتاج إلى الوصول إلى صورك لاختيار صور حيوانك الأليف لتحليل الصحة.";
+NSPhotoLibraryAddUsageDescription = "نحتاج إلى الوصول لحفظ صور حيوانك الأليف في مكتبة الصور الخاصة بك.";
+

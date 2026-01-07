@@ -1,0 +1,6 @@
+/* Privacy Permission Descriptions - Italiano */
+NSUserTrackingUsageDescription = "Utilizziamo il tracciamento per mostrarti pubblicità personalizzate e migliorare l'app.";
+NSCameraUsageDescription = "Abbiamo bisogno dell'accesso alla tua fotocamera per scattare foto del tuo animale domestico per l'analisi della salute.";
+NSPhotoLibraryUsageDescription = "Abbiamo bisogno dell'accesso alle tue foto per selezionare immagini del tuo animale domestico per l'analisi della salute.";
+NSPhotoLibraryAddUsageDescription = "Abbiamo bisogno dell'accesso per salvare le foto del tuo animale domestico nella tua libreria fotografica.";
+

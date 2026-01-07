@@ -241,3 +241,4 @@ Wenn alle Firebase Remote Config Keys korrekt gesetzt sind und die Console keine
 
 **Test:** Führe 3 Aktionen aus (z.B. Medikament hinzufügen, Termin erstellen, Impfung hinzufügen) und prüfe ob Interstitial nach der 3. Aktion erscheint.
 
+

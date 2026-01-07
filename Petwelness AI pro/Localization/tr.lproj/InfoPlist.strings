@@ -1,0 +1,6 @@
+/* Privacy Permission Descriptions - Türkçe */
+NSUserTrackingUsageDescription = "Size kişiselleştirilmiş reklamlar göstermek ve uygulamayı iyileştirmek için takip kullanıyoruz.";
+NSCameraUsageDescription = "Evcil hayvanınızın sağlık analizi için fotoğraflarını çekmek üzere kameranıza erişmemiz gerekiyor.";
+NSPhotoLibraryUsageDescription = "Evcil hayvanınızın sağlık analizi için görüntülerini seçmek üzere fotoğraflarınıza erişmemiz gerekiyor.";
+NSPhotoLibraryAddUsageDescription = "Evcil hayvanınızın fotoğraflarını fotoğraf kütüphanenize kaydetmek için erişime ihtiyacımız var.";
+

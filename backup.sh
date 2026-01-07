@@ -21,3 +21,4 @@ git commit -m "Auto-backup: $TIMESTAMP" || echo "ℹ️ Keine Änderungen zum Co
 echo "✅ Backup abgeschlossen: $TIMESTAMP"
 
 
+

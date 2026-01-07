@@ -1,0 +1,6 @@
+/* Privacy Permission Descriptions - 日本語 */
+NSUserTrackingUsageDescription = "パーソナライズされた広告を表示し、アプリを改善するためにトラッキングを使用します。";
+NSCameraUsageDescription = "ペットの健康分析のために写真を撮影するため、カメラへのアクセスが必要です。";
+NSPhotoLibraryUsageDescription = "ペットの健康分析のために画像を選択するため、写真へのアクセスが必要です。";
+NSPhotoLibraryAddUsageDescription = "ペットの写真をフォトライブラリに保存するためにアクセスが必要です。";
+

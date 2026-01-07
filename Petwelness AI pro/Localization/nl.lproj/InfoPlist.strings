@@ -1,0 +1,6 @@
+/* Privacy Permission Descriptions - Nederlands */
+NSUserTrackingUsageDescription = "We gebruiken tracking om u gepersonaliseerde advertenties te tonen en de app te verbeteren.";
+NSCameraUsageDescription = "We hebben toegang tot uw camera nodig om foto's van uw huisdier te maken voor gezondheidsanalyse.";
+NSPhotoLibraryUsageDescription = "We hebben toegang tot uw foto's nodig om afbeeldingen van uw huisdier te selecteren voor gezondheidsanalyse.";
+NSPhotoLibraryAddUsageDescription = "We hebben toegang nodig om foto's van uw huisdier op te slaan in uw fotobibliotheek.";
+
