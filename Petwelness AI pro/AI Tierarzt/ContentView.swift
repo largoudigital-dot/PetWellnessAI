@@ -47,6 +47,16 @@ struct ContentView: View {
                     UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
                 }
             }
+            .onAppear {
+                // ATT SOFORT anzeigen - VOR jeder Datensammlung (Apple Requirement)
+                // Wichtig: Nach minimaler Verzögerung, damit UI geladen ist
+                // Muss VOR Consent-Dialog erscheinen
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                    if #available(iOS 14.5, *) {
+                        AdManager.shared.requestTrackingPermission()
+                    }
+                }
+            }
             .onChange(of: scenePhase) { newPhase in
                 // Lade Remote Config neu wenn App wieder aktiv wird
                 if newPhase == .active {

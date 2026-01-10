@@ -64,6 +64,7 @@ struct EmergencyListView: View {
         }
         .fullScreenCover(item: $selectedEmergency) { emergency in
             EmergencyDetailView(emergency: emergency, categoryName: localizedCategoryName)
+                .environmentObject(LocalizationManager.shared)
         }
     }
     

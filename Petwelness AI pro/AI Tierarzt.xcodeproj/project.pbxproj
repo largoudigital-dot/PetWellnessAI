@@ -7,10 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		913FDEF32F03759F00F9AD54 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 913FDEF22F03759F00F9AD54 /* FirebaseAnalytics */; };
-		913FDEF52F03759F00F9AD54 /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = 913FDEF42F03759F00F9AD54 /* FirebaseCore */; };
-		913FDFA72F0416E900F9AD54 /* GoogleMobileAds in Frameworks */ = {isa = PBXBuildFile; productRef = 913FDFA62F0416E900F9AD54 /* GoogleMobileAds */; };
-		913FE2652F0423C200F9AD54 /* FirebaseRemoteConfig in Frameworks */ = {isa = PBXBuildFile; productRef = 913FE2642F0423C200F9AD54 /* FirebaseRemoteConfig */; };
+		91B8E9AA2F1294A300BE99F1 /* GoogleMobileAds in Frameworks */ = {isa = PBXBuildFile; productRef = 91B8E9A92F1294A300BE99F1 /* GoogleMobileAds */; };
+		91B8E9AD2F12952D00BE99F1 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 91B8E9AC2F12952D00BE99F1 /* FirebaseAnalytics */; };
+		91B8E9AF2F12952D00BE99F1 /* FirebaseAnalyticsCore in Frameworks */ = {isa = PBXBuildFile; productRef = 91B8E9AE2F12952D00BE99F1 /* FirebaseAnalyticsCore */; };
+		91B8E9B12F12952D00BE99F1 /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = 91B8E9B02F12952D00BE99F1 /* FirebaseCore */; };
+		91B8E9B32F12952D00BE99F1 /* FirebaseRemoteConfig in Frameworks */ = {isa = PBXBuildFile; productRef = 91B8E9B22F12952D00BE99F1 /* FirebaseRemoteConfig */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -59,10 +60,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				913FDFA72F0416E900F9AD54 /* GoogleMobileAds in Frameworks */,
-				913FDEF52F03759F00F9AD54 /* FirebaseCore in Frameworks */,
-				913FDEF32F03759F00F9AD54 /* FirebaseAnalytics in Frameworks */,
-				913FE2652F0423C200F9AD54 /* FirebaseRemoteConfig in Frameworks */,
+				91B8E9AD2F12952D00BE99F1 /* FirebaseAnalytics in Frameworks */,
+				91B8E9AF2F12952D00BE99F1 /* FirebaseAnalyticsCore in Frameworks */,
+				91B8E9B12F12952D00BE99F1 /* FirebaseCore in Frameworks */,
+				91B8E9AA2F1294A300BE99F1 /* GoogleMobileAds in Frameworks */,
+				91B8E9B32F12952D00BE99F1 /* FirebaseRemoteConfig in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -123,10 +125,11 @@
 			);
 			name = "AI Tierarzt";
 			packageProductDependencies = (
-				913FDEF22F03759F00F9AD54 /* FirebaseAnalytics */,
-				913FDEF42F03759F00F9AD54 /* FirebaseCore */,
-				913FDFA62F0416E900F9AD54 /* GoogleMobileAds */,
-				913FE2642F0423C200F9AD54 /* FirebaseRemoteConfig */,
+				91B8E9A92F1294A300BE99F1 /* GoogleMobileAds */,
+				91B8E9AC2F12952D00BE99F1 /* FirebaseAnalytics */,
+				91B8E9AE2F12952D00BE99F1 /* FirebaseAnalyticsCore */,
+				91B8E9B02F12952D00BE99F1 /* FirebaseCore */,
+				91B8E9B22F12952D00BE99F1 /* FirebaseRemoteConfig */,
 			);
 			productName = "AI Tierarzt";
 			productReference = 910FC45B2EE1F24A000659C8 /* AI Tierarzt.app */;
@@ -227,8 +230,8 @@
 			mainGroup = 910FC4522EE1F24A000659C8;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				913FDEF12F03759F00F9AD54 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
-				913FDFA52F0416E900F9AD54 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */,
+				91B8E9A82F1294A300BE99F1 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */,
+				91B8E9AB2F12952D00BE99F1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 910FC45C2EE1F24A000659C8 /* Products */;
@@ -432,7 +435,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_TEAM = 324JS7T6K6;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -454,7 +457,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.3;
+				MARKETING_VERSION = 1.1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = "devlargou.PetWellness-AI";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -475,7 +478,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_TEAM = 324JS7T6K6;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -497,7 +500,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.3;
+				MARKETING_VERSION = 1.1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = "devlargou.PetWellness-AI";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -625,15 +628,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		913FDEF12F03759F00F9AD54 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 12.7.0;
-			};
-		};
-		913FDFA52F0416E900F9AD54 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */ = {
+		91B8E9A82F1294A300BE99F1 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/googleads/swift-package-manager-google-mobile-ads";
 			requirement = {
@@ -641,27 +636,40 @@
 				minimumVersion = 12.14.0;
 			};
 		};
+		91B8E9AB2F12952D00BE99F1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 12.7.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		913FDEF22F03759F00F9AD54 /* FirebaseAnalytics */ = {
+		91B8E9A92F1294A300BE99F1 /* GoogleMobileAds */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 913FDEF12F03759F00F9AD54 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseAnalytics;
-		};
-		913FDEF42F03759F00F9AD54 /* FirebaseCore */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 913FDEF12F03759F00F9AD54 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseCore;
-		};
-		913FDFA62F0416E900F9AD54 /* GoogleMobileAds */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 913FDFA52F0416E900F9AD54 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */;
+			package = 91B8E9A82F1294A300BE99F1 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */;
 			productName = GoogleMobileAds;
 		};
-		913FE2642F0423C200F9AD54 /* FirebaseRemoteConfig */ = {
+		91B8E9AC2F12952D00BE99F1 /* FirebaseAnalytics */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 913FDEF12F03759F00F9AD54 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			package = 91B8E9AB2F12952D00BE99F1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalytics;
+		};
+		91B8E9AE2F12952D00BE99F1 /* FirebaseAnalyticsCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 91B8E9AB2F12952D00BE99F1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalyticsCore;
+		};
+		91B8E9B02F12952D00BE99F1 /* FirebaseCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 91B8E9AB2F12952D00BE99F1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCore;
+		};
+		91B8E9B22F12952D00BE99F1 /* FirebaseRemoteConfig */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 91B8E9AB2F12952D00BE99F1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseRemoteConfig;
 		};
 /* End XCSwiftPackageProductDependency section */

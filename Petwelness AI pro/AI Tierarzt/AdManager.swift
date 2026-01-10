@@ -560,48 +560,42 @@ class AdManager: NSObject, ObservableObject {
     }
     
     // MARK: - App Tracking Transparency (ATT)
+    // WICHTIG: ATT muss VOR jeder Datensammlung angezeigt werden (Apple Requirement)
+    // Wird direkt beim App-Start aufgerufen, VOR Consent-Dialog
     func requestTrackingPermission() {
-        // Nur anfragen wenn Consent erteilt wurde
-        guard consentManager.canShowAds() else {
-            print("⚠️ ATT: Consent nicht erteilt, Tracking wird nicht angefragt")
-            return
-        }
-        
         // Nur auf iOS 14.5+
         if #available(iOS 14.5, *) {
-            // Warte kurz, damit Consent-Dialog zuerst angezeigt wird
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-                let status = ATTrackingManager.trackingAuthorizationStatus
-                
-                // Nur anfragen wenn noch nicht bestimmt
-                if status == .notDetermined {
-                    ATTrackingManager.requestTrackingAuthorization { authorizationStatus in
-                        DispatchQueue.main.async {
-                            switch authorizationStatus {
-                            case .authorized:
-                                print("✅ ATT: Tracking erlaubt")
-                                // IDFA ist jetzt verfügbar für AdMob
-                                let idfa = ASIdentifierManager.shared().advertisingIdentifier
-                                print("📱 IDFA: \(idfa.uuidString)")
-                                
-                            case .denied:
-                                print("⚠️ ATT: Tracking verweigert")
-                                // AdMob kann trotzdem Ads zeigen, aber ohne Personalisierung
-                                
-                            case .restricted:
-                                print("⚠️ ATT: Tracking eingeschränkt (Parental Controls)")
-                                
-                            case .notDetermined:
-                                print("⚠️ ATT: Status nicht bestimmt")
-                                
-                            @unknown default:
-                                print("⚠️ ATT: Unbekannter Status")
-                            }
+            let status = ATTrackingManager.trackingAuthorizationStatus
+            
+            // Nur anfragen wenn noch nicht bestimmt
+            if status == .notDetermined {
+                print("📱 ATT: Zeige Tracking-Anfrage (VOR Datensammlung)...")
+                ATTrackingManager.requestTrackingAuthorization { authorizationStatus in
+                    DispatchQueue.main.async {
+                        switch authorizationStatus {
+                        case .authorized:
+                            print("✅ ATT: Tracking erlaubt")
+                            // IDFA ist jetzt verfügbar für AdMob
+                            let idfa = ASIdentifierManager.shared().advertisingIdentifier
+                            print("📱 IDFA: \(idfa.uuidString)")
+                            
+                        case .denied:
+                            print("⚠️ ATT: Tracking verweigert")
+                            // AdMob kann trotzdem Ads zeigen, aber ohne Personalisierung
+                            
+                        case .restricted:
+                            print("⚠️ ATT: Tracking eingeschränkt (Parental Controls)")
+                            
+                        case .notDetermined:
+                            print("⚠️ ATT: Status nicht bestimmt")
+                            
+                        @unknown default:
+                            print("⚠️ ATT: Unbekannter Status")
                         }
                     }
-                } else {
-                    print("ℹ️ ATT: Status bereits bestimmt: \(status.rawValue)")
                 }
+            } else {
+                print("ℹ️ ATT: Status bereits bestimmt: \(status.rawValue)")
             }
         } else {
             print("ℹ️ ATT: Nicht verfügbar auf iOS < 14.5")

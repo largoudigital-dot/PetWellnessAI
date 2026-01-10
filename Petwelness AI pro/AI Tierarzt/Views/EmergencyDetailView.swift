@@ -11,7 +11,9 @@ struct EmergencyDetailView: View {
     let emergency: Emergency
     let categoryName: String
     @Environment(\.dismiss) var dismiss
+    @EnvironmentObject var localizationManager: LocalizationManager
     @State private var screenHeight: CGFloat = UIScreen.main.bounds.height
+    @State private var showCitations = false
     
     var body: some View {
         GeometryReader { geometry in
@@ -26,6 +28,11 @@ struct EmergencyDetailView: View {
                     
                     ScrollView {
                         VStack(alignment: .leading, spacing: Spacing.lg) {
+                            // Prominenter medizinischer Disclaimer Banner (ganz oben)
+                            medicalDisclaimerBanner
+                                .padding(.horizontal, Spacing.xl)
+                                .padding(.top, Spacing.md)
+                            
                             // Bild oben - 25% der Bildschirmhöhe
                             if let imageName = emergency.imageName {
                                 Image(imageName)
@@ -142,12 +149,77 @@ struct EmergencyDetailView: View {
                         .background(Color.backgroundSecondary)
                         .cornerRadius(CornerRadius.large)
                         .padding(.horizontal, Spacing.xl)
+                        
+                        // Citations Button (prominent)
+                        Button(action: {
+                            showCitations = true
+                        }) {
+                            HStack(spacing: Spacing.md) {
+                                Image(systemName: "book.fill")
+                                    .font(.system(size: 18))
+                                    .foregroundColor(.brandPrimary)
+                                
+                                Text("citations.sources".localized)
+                                    .font(.system(size: 16, weight: .semibold))
+                                    .foregroundColor(.brandPrimary)
+                                
+                                Spacer()
+                                
+                                Image(systemName: "chevron.right")
+                                    .font(.system(size: 14))
+                                    .foregroundColor(.brandPrimary)
+                            }
+                            .padding(Spacing.lg)
+                            .background(Color.brandPrimary.opacity(0.1))
+                            .cornerRadius(CornerRadius.medium)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: CornerRadius.medium)
+                                    .stroke(Color.brandPrimary.opacity(0.3), lineWidth: 1)
+                            )
+                        }
+                        .buttonStyle(PlainButtonStyle())
+                        .padding(.horizontal, Spacing.xl)
+                        .padding(.top, Spacing.md)
                         .padding(.bottom, Spacing.xl)
                         }
                     }
                 }
             }
         }
+        .sheet(isPresented: $showCitations) {
+            MedicalCitationsView()
+                .environmentObject(localizationManager)
+        }
+    }
+    
+    // Prominenter medizinischer Disclaimer Banner
+    private var medicalDisclaimerBanner: some View {
+        VStack(spacing: Spacing.sm) {
+            HStack(spacing: Spacing.sm) {
+                Image(systemName: "exclamationmark.shield.fill")
+                    .font(.system(size: 18, weight: .semibold))
+                    .foregroundColor(.accentRed)
+                
+                Text("disclaimer.medical".localized)
+                    .font(.system(size: 16, weight: .bold))
+                    .foregroundColor(.textPrimary)
+                    .id(localizationManager.currentLanguage)
+            }
+            
+            Text("disclaimer.medicalText".localized)
+                .font(.system(size: 14))
+                .foregroundColor(.textPrimary.opacity(0.9))
+                .multilineTextAlignment(.center)
+                .lineSpacing(4)
+                .id(localizationManager.currentLanguage)
+        }
+        .frame(maxWidth: .infinity)
+        .padding(Spacing.md)
+        .background(Color.accentRed.opacity(0.1))
+        .overlay(
+            RoundedRectangle(cornerRadius: CornerRadius.medium)
+                .stroke(Color.accentRed.opacity(0.3), lineWidth: 2)
+        )
     }
     
     // MARK: - Header View

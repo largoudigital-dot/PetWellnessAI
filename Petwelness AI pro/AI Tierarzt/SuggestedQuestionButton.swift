@@ -11,32 +11,50 @@ struct SuggestedQuestionButton: View {
     let question: String
     let icon: String
     let action: () -> Void
+    @Environment(\.horizontalSizeClass) var horizontalSizeClass
+    @Environment(\.verticalSizeClass) var verticalSizeClass
+    
+    var isIPad: Bool {
+        horizontalSizeClass == .regular && verticalSizeClass == .regular
+    }
     
     var body: some View {
         Button(action: action) {
-            HStack(spacing: Spacing.md) {
+            HStack(spacing: isIPad ? Spacing.lg : Spacing.md) {
                 Image(systemName: icon)
-                    .font(.system(size: 18))
+                    .font(.system(size: isIPad ? 20 : 18, weight: .semibold))
                     .foregroundColor(.brandPrimary)
-                    .frame(width: 32, height: 32)
-                    .background(Color.brandPrimary.opacity(0.1))
-                    .cornerRadius(8)
+                    .frame(width: isIPad ? 40 : 32, height: isIPad ? 40 : 32)
+                    .background(
+                        LinearGradient(
+                            colors: [Color.brandPrimary.opacity(0.15), Color.brandPrimary.opacity(0.1)],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    )
+                    .cornerRadius(isIPad ? 10 : 8)
                 
                 Text(question)
-                    .font(.system(size: 16))
+                    .font(.system(size: isIPad ? 17 : 15, weight: .medium))
                     .foregroundColor(.textPrimary)
                     .multilineTextAlignment(.leading)
+                    .lineLimit(2)
+                    .fixedSize(horizontal: false, vertical: true)
                 
                 Spacer()
                 
                 Image(systemName: "arrow.right.circle.fill")
-                    .font(.system(size: 20))
-                    .foregroundColor(.textTertiary)
+                    .font(.system(size: isIPad ? 22 : 20))
+                    .foregroundColor(.brandPrimary.opacity(0.6))
             }
-            .padding(Spacing.md)
+            .padding(isIPad ? Spacing.lg : Spacing.md)
             .background(Color.backgroundSecondary)
-            .cornerRadius(CornerRadius.medium)
-            .shadow(color: Color.black.opacity(0.1), radius: 4, x: 0, y: 2)
+            .cornerRadius(isIPad ? CornerRadius.large : CornerRadius.medium)
+            .overlay(
+                RoundedRectangle(cornerRadius: isIPad ? CornerRadius.large : CornerRadius.medium)
+                    .stroke(Color.brandPrimary.opacity(0.2), lineWidth: isIPad ? 1.5 : 1)
+            )
+            .shadow(color: Color.black.opacity(0.08), radius: isIPad ? 6 : 4, x: 0, y: 2)
         }
         .buttonStyle(PlainButtonStyle())
     }

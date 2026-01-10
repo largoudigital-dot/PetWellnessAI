@@ -20,6 +20,7 @@ struct ChatView: View {
     @State private var showSuggestedQuestions = false
     @State private var isKeyboardVisible = false
     @State private var showDeleteConfirmation = false
+    @State private var showCitations = false
     @State private var errorMessage: String? = nil
     @State private var showError = false
     @StateObject private var chatViewModel = ChatViewModel()
@@ -106,6 +107,26 @@ struct ChatView: View {
                     
                     Spacer()
                     
+                    // Citations-Button (prominent platziert - größer für bessere Sichtbarkeit)
+                    Button(action: {
+                        showCitations = true
+                    }) {
+                        HStack(spacing: isIPad ? 6 : 4) {
+                            Image(systemName: "book.fill")
+                                .font(.system(size: isIPad ? 20 : 16, weight: .semibold))
+                                .foregroundColor(.brandPrimary)
+                            if isIPad {
+                                Text("citations.title".localized)
+                                    .font(.system(size: 14, weight: .semibold))
+                                    .foregroundColor(.brandPrimary)
+                            }
+                        }
+                    }
+                    .frame(width: isIPad ? 120 : 44, height: isIPad ? 44 : 32)
+                    .contentShape(Rectangle())
+                    .buttonStyle(PlainButtonStyle())
+                    .id(localizationManager.currentLanguage)
+                    
                     // Lösch-Icon
                     Button(action: {
                         showDeleteConfirmation = true
@@ -125,15 +146,8 @@ struct ChatView: View {
                 Divider()
                     .frame(height: 0.5)
                 
-                // Disclaimer Banner - Immer sichtbar oben im Chat
-                disclaimerBanner
-                
-                // Banner Ad unter dem Disclaimer-Banner
-                if AdManager.shared.shouldShowBannerAds {
-                    BannerAdView()
-                        .frame(height: 50)
-                        .padding(.vertical, Spacing.sm)
-                }
+                // Prominenter medizinischer Disclaimer Banner (roter Banner)
+                medicalDisclaimerBanner
                 
                 // Messages Area
                 ScrollViewReader { proxy in
@@ -314,6 +328,10 @@ struct ChatView: View {
                 Text(errorMessage)
             }
         }
+        .sheet(isPresented: $showCitations) {
+            MedicalCitationsView()
+                .environmentObject(localizationManager)
+        }
         .navigationBarHidden(true)
     }
     
@@ -360,6 +378,39 @@ struct ChatView: View {
         )
         .padding(.horizontal, Spacing.sm)
         .padding(.vertical, 4)
+    }
+    
+    // Prominenter medizinischer Disclaimer Banner
+    private var medicalDisclaimerBanner: some View {
+        VStack(spacing: isIPad ? 6 : 4) {
+            HStack(spacing: isIPad ? 8 : 6) {
+                Image(systemName: "exclamationmark.shield.fill")
+                    .font(.system(size: isIPad ? 18 : 14, weight: .semibold))
+                    .foregroundColor(.accentRed)
+                
+                Text("disclaimer.medical".localized)
+                    .font(.system(size: isIPad ? 16 : 12, weight: .bold))
+                    .foregroundColor(.textPrimary)
+                    .id(localizationManager.currentLanguage)
+            }
+            
+            Text("disclaimer.medicalText".localized)
+                .font(.system(size: isIPad ? 14 : 11))
+                .foregroundColor(.textPrimary.opacity(0.9))
+                .multilineTextAlignment(.center)
+                .lineSpacing(isIPad ? 4 : 2)
+                .id(localizationManager.currentLanguage)
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.horizontal, isIPad ? Spacing.lg : Spacing.md)
+        .padding(.vertical, isIPad ? Spacing.md : Spacing.sm)
+        .background(Color.accentRed.opacity(0.1))
+        .overlay(
+            RoundedRectangle(cornerRadius: isIPad ? 12 : 8)
+                .stroke(Color.accentRed.opacity(0.3), lineWidth: isIPad ? 2 : 1.5)
+        )
+        .padding(.horizontal, isIPad ? Spacing.md : Spacing.sm)
+        .padding(.vertical, isIPad ? Spacing.sm : 4)
     }
     
     private var welcomeMessage: some View {
@@ -410,21 +461,21 @@ struct ChatView: View {
             VStack(spacing: Spacing.sm) {
                 SuggestedQuestionButton(
                     question: "chat.question1".localized,
-                    icon: "dog.fill"
+                    icon: "heart.text.square.fill"
                 ) {
                     appState.chatInputText = "chat.question1".localized
                 }
                 
                 SuggestedQuestionButton(
                     question: "chat.question2".localized,
-                    icon: "cat.fill"
+                    icon: "exclamationmark.triangle.fill"
                 ) {
                     appState.chatInputText = "chat.question2".localized
                 }
                 
                 SuggestedQuestionButton(
                     question: "chat.question3".localized,
-                    icon: "pawprint.fill"
+                    icon: "chart.line.uptrend.xyaxis"
                 ) {
                     appState.chatInputText = "chat.question3".localized
                 }
