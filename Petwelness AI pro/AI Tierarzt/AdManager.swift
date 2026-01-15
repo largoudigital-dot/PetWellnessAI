@@ -438,14 +438,22 @@ class AdManager: NSObject, ObservableObject {
         }
         
         // WICHTIG: Consent beim App-Start anfordern
-        requestConsentOnStart()
-        
-        // Request Tracking Permission (ATT) - wird nach Consent angezeigt
-        requestTrackingPermission()
+        requestConsentOnStart { [weak self] consentGranted in
+            // ATT wird NUR gezeigt wenn Consent erteilt wurde ODER nicht erforderlich ist
+            // Wenn Consent verweigert wurde, wird ATT NICHT gezeigt (Apple Requirement)
+            if consentGranted {
+                print("✅ Consent erteilt - zeige ATT...")
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    self?.requestTrackingPermission()
+                }
+            } else {
+                print("⚠️ Consent verweigert - ATT wird NICHT angezeigt (Apple Requirement)")
+            }
+        }
     }
     
     // MARK: - Consent Request
-    private func requestConsentOnStart() {
+    private func requestConsentOnStart(completion: @escaping (Bool) -> Void = { _ in }) {
         print("🔍 Prüfe Consent-Status...")
         print("   - consentStatus: \(consentManager.consentStatus)")
         print("   - canShowAds(): \(consentManager.canShowAds())")
@@ -453,6 +461,7 @@ class AdManager: NSObject, ObservableObject {
         // Wenn Consent bereits erteilt oder nicht erforderlich, nichts tun
         if consentManager.canShowAds() {
             print("✅ Consent bereits erteilt oder nicht erforderlich")
+            completion(true)
             return
         }
         
@@ -468,10 +477,15 @@ class AdManager: NSObject, ObservableObject {
                         self?.loadInterstitialAd()
                         self?.loadRewardedAd()
                     }
+                    completion(true)
                 } else {
                     print("❌ Consent verweigert - Ads werden nicht angezeigt")
+                    completion(false)
                 }
             }
+        } else {
+            // Consent wurde bereits verweigert
+            completion(false)
         }
     }
     
@@ -561,15 +575,29 @@ class AdManager: NSObject, ObservableObject {
     
     // MARK: - App Tracking Transparency (ATT)
     // WICHTIG: ATT muss VOR jeder Datensammlung angezeigt werden (Apple Requirement)
-    // Wird direkt beim App-Start aufgerufen, VOR Consent-Dialog
+    // WICHTIG: ATT wird NUR gezeigt wenn GDPR Consent erteilt wurde ODER nicht erforderlich ist
+    // Wenn User GDPR Consent verweigert hat, wird ATT NICHT gezeigt (Apple Requirement)
     func requestTrackingPermission() {
+        // Prüfe zuerst GDPR Consent Status
+        // Wenn Consent verweigert wurde, zeige ATT NICHT (Apple Requirement)
+        if consentManager.consentStatus == .denied {
+            print("⚠️ ATT: GDPR Consent wurde verweigert - ATT wird NICHT angezeigt (Apple Requirement)")
+            return
+        }
+        
         // Nur auf iOS 14.5+
         if #available(iOS 14.5, *) {
             let status = ATTrackingManager.trackingAuthorizationStatus
             
             // Nur anfragen wenn noch nicht bestimmt
             if status == .notDetermined {
-                print("📱 ATT: Zeige Tracking-Anfrage (VOR Datensammlung)...")
+                // Prüfe nochmal ob Consent erteilt wurde ODER nicht erforderlich ist
+                guard consentManager.canShowAds() else {
+                    print("⚠️ ATT: Consent nicht erteilt - ATT wird NICHT angezeigt")
+                    return
+                }
+                
+                print("📱 ATT: Zeige Tracking-Anfrage (nach GDPR Consent)...")
                 ATTrackingManager.requestTrackingAuthorization { authorizationStatus in
                     DispatchQueue.main.async {
                         switch authorizationStatus {

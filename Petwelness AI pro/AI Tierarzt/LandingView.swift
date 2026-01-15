@@ -160,6 +160,15 @@ struct LandingView: View {
                         UserDefaults.standard.set(true, forKey: "hasAcceptedTerms")
                         UserDefaults.standard.set(true, forKey: "hasAcceptedPrivacy")
                         UserDefaults.standard.synchronize()
+                        
+                        // Error Handling: Prüfe ob Speicherung erfolgreich war
+                        guard UserDefaults.standard.bool(forKey: "hasAcceptedTerms") &&
+                              UserDefaults.standard.bool(forKey: "hasAcceptedPrivacy") else {
+                            // Fehler beim Speichern - zeige Fehler (sollte nicht passieren)
+                            print("⚠️ Fehler beim Speichern der Zustimmung")
+                            return
+                        }
+                        
                         withAnimation(.spring(response: 0.5, dampingFraction: 0.8)) {
                             hasSeenOnboarding = true
                         }

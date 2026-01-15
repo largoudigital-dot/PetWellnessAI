@@ -48,14 +48,10 @@ struct ContentView: View {
                 }
             }
             .onAppear {
-                // ATT SOFORT anzeigen - VOR jeder Datensammlung (Apple Requirement)
-                // Wichtig: Nach minimaler Verzögerung, damit UI geladen ist
-                // Muss VOR Consent-Dialog erscheinen
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                    if #available(iOS 14.5, *) {
-                        AdManager.shared.requestTrackingPermission()
-                    }
-                }
+                // WICHTIG: ATT wird NUR gezeigt wenn GDPR Consent erteilt wurde
+                // ATT wird von AdManager nach GDPR Consent aufgerufen
+                // Siehe AdManager.initializeAdMob() und AdManager.requestConsentOnStart()
+                // ContentView ruft ATT NICHT mehr direkt auf - wird von AdManager gesteuert
             }
             .onChange(of: scenePhase) { newPhase in
                 // Lade Remote Config neu wenn App wieder aktiv wird
