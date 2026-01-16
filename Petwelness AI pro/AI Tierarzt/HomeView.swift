@@ -83,6 +83,7 @@ struct HomeView: View {
             }
             .sheet(isPresented: $showPhotoAnalysis) {
                 PhotoAnalysisView()
+                    .environmentObject(LocalizationManager.shared)
                     .environmentObject(localizationManager)
                     .environmentObject(appState)
             }

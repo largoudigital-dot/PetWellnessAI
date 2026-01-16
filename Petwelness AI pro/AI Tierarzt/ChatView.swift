@@ -574,14 +574,37 @@ struct ChatView: View {
                         case .limitReached:
                             errorMessage = "Tageslimit erreicht. Bitte versuchen Sie es morgen erneut."
                         case .httpError(let code):
-                            errorMessage = "HTTP Fehler: \(code). Bitte versuchen Sie es später erneut."
+                            if code == 429 {
+                                errorMessage = "Der Service ist derzeit überlastet. Bitte versuchen Sie es in ein paar Minuten erneut."
+                            } else if code == 503 {
+                                errorMessage = "Der Service ist vorübergehend nicht verfügbar. Bitte versuchen Sie es später erneut."
+                            } else {
+                                errorMessage = "Verbindungsfehler (\(code)). Bitte versuchen Sie es später erneut."
+                            }
                         case .apiError(let message):
-                            errorMessage = "API Fehler: \(message)"
+                            // Benutzerfreundliche Fehlermeldungen für häufige API-Fehler
+                            if message.lowercased().contains("overloaded") || message.lowercased().contains("rate limit") {
+                                errorMessage = "Der Service ist derzeit sehr ausgelastet. Bitte versuchen Sie es in ein paar Minuten erneut."
+                            } else if message.lowercased().contains("timeout") {
+                                errorMessage = "Die Anfrage hat zu lange gedauert. Bitte versuchen Sie es erneut."
+                            } else if message.lowercased().contains("quota") || message.lowercased().contains("limit") {
+                                errorMessage = "Das Tageslimit wurde erreicht. Bitte versuchen Sie es morgen erneut."
+                            } else {
+                                errorMessage = "Ein Fehler ist aufgetreten. Bitte versuchen Sie es später erneut."
+                            }
                         default:
                             errorMessage = "Ein Fehler ist aufgetreten. Bitte versuchen Sie es später erneut."
                         }
                     } else {
-                        errorMessage = "Ein Fehler ist aufgetreten: \(error.localizedDescription)"
+                        // Generische Fehlermeldung für unbekannte Fehler
+                        let errorDesc = error.localizedDescription.lowercased()
+                        if errorDesc.contains("network") || errorDesc.contains("internet") {
+                            errorMessage = "Keine Internetverbindung. Bitte prüfen Sie Ihre Verbindung und versuchen Sie es erneut."
+                        } else if errorDesc.contains("timeout") {
+                            errorMessage = "Die Verbindung hat zu lange gedauert. Bitte versuchen Sie es erneut."
+                        } else {
+                            errorMessage = "Ein Fehler ist aufgetreten. Bitte versuchen Sie es später erneut."
+                        }
                     }
                     showError = true
                 }

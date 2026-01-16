@@ -13,10 +13,12 @@ struct PhotoAnalysisView: View {
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
     @Environment(\.verticalSizeClass) var verticalSizeClass
     @EnvironmentObject var appState: AppState
+    @EnvironmentObject var localizationManager: LocalizationManager
     @State private var selectedImage: UIImage?
     @State private var showImagePicker = false
     @State private var showCamera = false
     @State private var showChat = false
+    @State private var showCitations = false
     @State private var imagePickerSourceType: UIImagePickerController.SourceType = .photoLibrary
     
     var isIPad: Bool {
@@ -31,6 +33,10 @@ struct PhotoAnalysisView: View {
                 
                 ScrollView {
                     VStack(spacing: isIPad ? Spacing.xxl : Spacing.xl) {
+                        // Prominenter medizinischer Disclaimer Banner
+                        medicalDisclaimerBanner
+                            .padding(.top, isIPad ? Spacing.lg : Spacing.md)
+                        
                         // Upload Area
                         VStack(spacing: isIPad ? Spacing.xl : Spacing.lg) {
                             // Dashed Border Upload Area mit Foto-Vorschau
@@ -141,6 +147,24 @@ struct PhotoAnalysisView: View {
                             .foregroundColor(.brandPrimary)
                     }
                 }
+                
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button(action: {
+                        showCitations = true
+                    }) {
+                        HStack(spacing: isIPad ? 6 : 4) {
+                            Image(systemName: "book.fill")
+                                .font(.system(size: isIPad ? 20 : 16, weight: .semibold))
+                                .foregroundColor(.brandPrimary)
+                            if isIPad {
+                                Text("citations.title".localized)
+                                    .font(.system(size: 14, weight: .semibold))
+                                    .foregroundColor(.brandPrimary)
+                            }
+                        }
+                    }
+                    .id(localizationManager.currentLanguage)
+                }
             }
             .sheet(isPresented: $showImagePicker) {
                 ImagePicker(image: $selectedImage, sourceType: .photoLibrary)
@@ -157,8 +181,44 @@ struct PhotoAnalysisView: View {
                     .presentationDetents(isIPad ? [.large] : [.large])
                     .presentationDragIndicator(.visible)
             }
+            .sheet(isPresented: $showCitations) {
+                MedicalCitationsView()
+                    .environmentObject(localizationManager)
+            }
         }
         .navigationViewStyle(.stack)
+    }
+    
+    // Prominenter medizinischer Disclaimer Banner
+    private var medicalDisclaimerBanner: some View {
+        VStack(spacing: isIPad ? 6 : 4) {
+            HStack(spacing: isIPad ? 8 : 6) {
+                Image(systemName: "exclamationmark.shield.fill")
+                    .font(.system(size: isIPad ? 18 : 14, weight: .semibold))
+                    .foregroundColor(.accentRed)
+                
+                Text("disclaimer.medical".localized)
+                    .font(.system(size: isIPad ? 16 : 12, weight: .bold))
+                    .foregroundColor(.textPrimary)
+                    .id(localizationManager.currentLanguage)
+            }
+            
+            Text("disclaimer.medicalText".localized)
+                .font(.system(size: isIPad ? 14 : 11))
+                .foregroundColor(.textPrimary.opacity(0.9))
+                .multilineTextAlignment(.center)
+                .lineSpacing(isIPad ? 4 : 2)
+                .id(localizationManager.currentLanguage)
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.horizontal, isIPad ? Spacing.lg : Spacing.md)
+        .padding(.vertical, isIPad ? Spacing.md : Spacing.sm)
+        .background(Color.accentRed.opacity(0.1))
+        .overlay(
+            RoundedRectangle(cornerRadius: isIPad ? 12 : 8)
+                .stroke(Color.accentRed.opacity(0.3), lineWidth: isIPad ? 2 : 1.5)
+        )
+        .padding(.horizontal, isIPad ? Spacing.md : Spacing.sm)
     }
 }
 

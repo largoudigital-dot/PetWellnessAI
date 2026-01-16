@@ -16,6 +16,7 @@ struct SymptomInputView: View {
     @StateObject private var adManager = AdManager.shared
     @State private var selectedSymptoms: Set<String> = []
     @State private var additionalNotes = ""
+    @State private var showCitations = false
     
     var isIPad: Bool {
         horizontalSizeClass == .regular && verticalSizeClass == .regular
@@ -76,13 +77,25 @@ struct SymptomInputView: View {
                     
                     Spacer()
                     
-                    // Invisible button for balance
-                    Button(action: {}) {
-                        Image(systemName: "xmark")
-                            .font(.system(size: isIPad ? 24 : 18))
-                            .foregroundColor(.clear)
+                    // Citations-Button (prominent platziert)
+                    Button(action: {
+                        showCitations = true
+                    }) {
+                        HStack(spacing: isIPad ? 6 : 4) {
+                            Image(systemName: "book.fill")
+                                .font(.system(size: isIPad ? 20 : 16, weight: .semibold))
+                                .foregroundColor(.brandPrimary)
+                            if isIPad {
+                                Text("citations.title".localized)
+                                    .font(.system(size: 14, weight: .semibold))
+                                    .foregroundColor(.brandPrimary)
+                            }
+                        }
                     }
-                    .frame(width: isIPad ? 44 : 32, height: isIPad ? 44 : 32)
+                    .frame(width: isIPad ? 120 : 44, height: isIPad ? 44 : 32)
+                    .contentShape(Rectangle())
+                    .buttonStyle(PlainButtonStyle())
+                    .id(localizationManager.currentLanguage)
                 }
                 .padding(.horizontal, isIPad ? Spacing.xxxl : Spacing.xl)
                 .padding(.vertical, isIPad ? Spacing.lg : Spacing.md)
@@ -90,6 +103,10 @@ struct SymptomInputView: View {
                 
                 ScrollView {
                     VStack(spacing: isIPad ? Spacing.xxl : Spacing.xl) {
+                        // Prominenter medizinischer Disclaimer Banner
+                        medicalDisclaimerBanner
+                            .padding(.top, isIPad ? Spacing.lg : Spacing.md)
+                        
                         // Symptom Grid
                         VStack(alignment: .leading, spacing: isIPad ? Spacing.xl : Spacing.lg) {
                             Text("symptomInput.commonSymptoms".localized)
@@ -203,7 +220,43 @@ struct SymptomInputView: View {
                 // Lade Interstitial Ad beim Erscheinen
                 adManager.loadInterstitialAd()
             }
+            .sheet(isPresented: $showCitations) {
+                MedicalCitationsView()
+                    .environmentObject(localizationManager)
+            }
         }
+    }
+    
+    // Prominenter medizinischer Disclaimer Banner
+    private var medicalDisclaimerBanner: some View {
+        VStack(spacing: isIPad ? 6 : 4) {
+            HStack(spacing: isIPad ? 8 : 6) {
+                Image(systemName: "exclamationmark.shield.fill")
+                    .font(.system(size: isIPad ? 18 : 14, weight: .semibold))
+                    .foregroundColor(.accentRed)
+                
+                Text("disclaimer.medical".localized)
+                    .font(.system(size: isIPad ? 16 : 12, weight: .bold))
+                    .foregroundColor(.textPrimary)
+                    .id(localizationManager.currentLanguage)
+            }
+            
+            Text("disclaimer.medicalText".localized)
+                .font(.system(size: isIPad ? 14 : 11))
+                .foregroundColor(.textPrimary.opacity(0.9))
+                .multilineTextAlignment(.center)
+                .lineSpacing(isIPad ? 4 : 2)
+                .id(localizationManager.currentLanguage)
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.horizontal, isIPad ? Spacing.lg : Spacing.md)
+        .padding(.vertical, isIPad ? Spacing.md : Spacing.sm)
+        .background(Color.accentRed.opacity(0.1))
+        .overlay(
+            RoundedRectangle(cornerRadius: isIPad ? 12 : 8)
+                .stroke(Color.accentRed.opacity(0.3), lineWidth: isIPad ? 2 : 1.5)
+        )
+        .padding(.horizontal, isIPad ? Spacing.md : Spacing.sm)
     }
 }
 

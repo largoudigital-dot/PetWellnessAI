@@ -35,6 +35,8 @@ class FirebaseManager {
     func configure() {
         #if canImport(FirebaseCore)
         // Firebase wird automatisch über GoogleService-Info.plist konfiguriert
+        // Fehlerbehandlung: Firebase.configure() wirft keine Exceptions
+        // Wenn GoogleService-Info.plist fehlt, wird Firebase trotzdem initialisiert (mit Warnung)
         if FirebaseApp.app() == nil {
             FirebaseApp.configure()
             print("✅ Firebase konfiguriert")
@@ -48,7 +50,8 @@ class FirebaseManager {
             isConfigured = true
         }
         #else
-        print("⚠️ Firebase Framework nicht gefunden. Füge Firebase SDK hinzu.")
+        print("⚠️ Firebase Framework nicht gefunden (nicht kritisch - App funktioniert ohne Firebase)")
+        // KEIN Fehler-Dialog - App funktioniert auch ohne Firebase
         #endif
     }
     

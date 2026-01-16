@@ -251,9 +251,17 @@ struct EmergencyDetailView: View {
             
             Spacer()
             
-            // Platzhalter rechts für symmetrisches Layout
-            Color.clear
-                .frame(width: 30, height: 30)
+            // Citations-Button rechts (prominent platziert)
+            Button(action: {
+                showCitations = true
+            }) {
+                Image(systemName: "book.fill")
+                    .font(.system(size: 18, weight: .semibold))
+                    .foregroundColor(.brandPrimary)
+            }
+            .frame(width: 30, height: 30)
+            .contentShape(Rectangle())
+            .buttonStyle(PlainButtonStyle())
         }
         .padding(.horizontal, Spacing.lg)
         .padding(.vertical, 12)

@@ -15,19 +15,24 @@ struct AI_TierarztApp: App {
     
     init() {
         // WICHTIG: Notification Delegate ZUERST setzen
+        // Fehlerbehandlung: Kein Crash wenn Notification Delegate fehlschlägt
         UNUserNotificationCenter.current().delegate = NotificationDelegate.shared
         print("✅ Notification Delegate gesetzt")
         
         // WICHTIG: Firebase ZUERST konfigurieren, bevor irgendetwas anderes passiert
+        // Fehlerbehandlung: Kein Crash wenn Firebase nicht verfügbar ist
+        // Firebase.configure() wirft keine Exceptions, aber prüfe ob es erfolgreich war
         FirebaseManager.shared.configure()
         
         // Prüfe Application ID SOFORT
+        // Fehlerbehandlung: Kein Crash wenn Application ID fehlt
+        // KEIN Fehler-Dialog - App funktioniert auch ohne Ads
         if let appID = Bundle.main.object(forInfoDictionaryKey: "GADApplicationIdentifier") as? String,
            !appID.isEmpty {
             print("✅ AdMob Application ID gefunden im init: \(appID)")
         } else {
-            print("❌ FEHLER: GADApplicationIdentifier nicht in Info.plist gefunden!")
-            print("❌ Stelle sicher, dass die Application ID in Info.plist gesetzt ist.")
+            print("⚠️ AdMob Application ID nicht gefunden (nicht kritisch - Ads werden nicht geladen)")
+            // KEIN Fehler-Dialog - App funktioniert auch ohne Ads
         }
         
         // AdMob initialisieren (nach Firebase)
@@ -37,6 +42,9 @@ struct AI_TierarztApp: App {
             // Damit beim ersten Klick nach App-Start Interstitial sofort erscheint
             AdManager.shared.resetFirstInterstitialFlag()
             
+            // Fehlerbehandlung: initializeAdMob() wirft keine Exceptions
+            // Alle Fehler werden intern behandelt und geloggt
+            // KEIN Fehler-Dialog wird angezeigt
             AdManager.shared.initializeAdMob()
             
             // Ads werden jetzt direkt in initializeAdMob() geladen

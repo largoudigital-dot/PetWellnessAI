@@ -132,10 +132,12 @@ struct MoreView: View {
                 DashboardView()
             case .tutorials:
                 TutorialsView()
+                    .environmentObject(localizationManager)
             case .gamification:
                 GamificationView()
             case .resources:
                 ResourcesView()
+                    .environmentObject(localizationManager)
             }
         }
     }

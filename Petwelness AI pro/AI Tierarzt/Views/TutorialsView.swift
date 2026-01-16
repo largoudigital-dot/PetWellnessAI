@@ -9,7 +9,15 @@ import SwiftUI
 
 struct TutorialsView: View {
     @State private var selectedCategory: TutorialCategory?
+    @State private var showCitations = false
     @Environment(\.dismiss) var dismiss
+    @Environment(\.horizontalSizeClass) var horizontalSizeClass
+    @Environment(\.verticalSizeClass) var verticalSizeClass
+    @EnvironmentObject var localizationManager: LocalizationManager
+    
+    var isIPad: Bool {
+        horizontalSizeClass == .regular && verticalSizeClass == .regular
+    }
     
     enum TutorialCategory: String, CaseIterable {
         case care = "Pflege"
@@ -29,6 +37,10 @@ struct TutorialsView: View {
                 
                 ScrollView {
                     VStack(spacing: Spacing.lg) {
+                        // Prominenter medizinischer Disclaimer Banner
+                        medicalDisclaimerBanner
+                            .padding(.top, isIPad ? Spacing.lg : Spacing.md)
+                        
                         // Categories
                         VStack(spacing: Spacing.lg) {
                             TutorialCategoryCard(
@@ -85,6 +97,10 @@ struct TutorialsView: View {
                 }
             }
         }
+        .sheet(isPresented: $showCitations) {
+            MedicalCitationsView()
+                .environmentObject(localizationManager)
+        }
     }
     
     // MARK: - Header View
@@ -115,9 +131,25 @@ struct TutorialsView: View {
             
             Spacer()
             
-            // Unsichtbarer Platzhalter für Balance
-            Color.clear
-                .frame(minWidth: 80)
+            // Citations-Button (prominent platziert)
+            Button(action: {
+                showCitations = true
+            }) {
+                HStack(spacing: isIPad ? 6 : 4) {
+                    Image(systemName: "book.fill")
+                        .font(.system(size: isIPad ? 20 : 16, weight: .semibold))
+                        .foregroundColor(.brandPrimary)
+                    if isIPad {
+                        Text("citations.title".localized)
+                            .font(.system(size: 14, weight: .semibold))
+                            .foregroundColor(.brandPrimary)
+                    }
+                }
+            }
+            .frame(width: isIPad ? 120 : 44, height: isIPad ? 44 : 32)
+            .contentShape(Rectangle())
+            .buttonStyle(PlainButtonStyle())
+            .id(localizationManager.currentLanguage)
         }
         .padding(.horizontal, Spacing.lg)
         .padding(.vertical, 12)
@@ -271,6 +303,38 @@ struct TutorialsView: View {
             RoundedRectangle(cornerRadius: 16)
                 .fill(Color.backgroundSecondary)
         )
+    }
+    
+    // Prominenter medizinischer Disclaimer Banner
+    private var medicalDisclaimerBanner: some View {
+        VStack(spacing: isIPad ? 6 : 4) {
+            HStack(spacing: isIPad ? 8 : 6) {
+                Image(systemName: "exclamationmark.shield.fill")
+                    .font(.system(size: isIPad ? 18 : 14, weight: .semibold))
+                    .foregroundColor(.accentRed)
+                
+                Text("disclaimer.medical".localized)
+                    .font(.system(size: isIPad ? 16 : 12, weight: .bold))
+                    .foregroundColor(.textPrimary)
+                    .id(localizationManager.currentLanguage)
+            }
+            
+            Text("disclaimer.medicalText".localized)
+                .font(.system(size: isIPad ? 14 : 11))
+                .foregroundColor(.textPrimary.opacity(0.9))
+                .multilineTextAlignment(.center)
+                .lineSpacing(isIPad ? 4 : 2)
+                .id(localizationManager.currentLanguage)
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.horizontal, isIPad ? Spacing.lg : Spacing.md)
+        .padding(.vertical, isIPad ? Spacing.md : Spacing.sm)
+        .background(Color.accentRed.opacity(0.1))
+        .overlay(
+            RoundedRectangle(cornerRadius: isIPad ? 12 : 8)
+                .stroke(Color.accentRed.opacity(0.3), lineWidth: isIPad ? 2 : 1.5)
+        )
+        .padding(.horizontal, isIPad ? Spacing.md : Spacing.sm)
     }
 }
 
