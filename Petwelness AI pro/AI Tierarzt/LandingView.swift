@@ -22,19 +22,92 @@ struct LandingView: View {
         horizontalSizeClass == .regular && verticalSizeClass == .regular
     }
     
-    // Adaptive sizes for iPad
-    private var logoSize: CGFloat { isIPad ? 280 : 160 }
-    private var logoCircleSize: CGFloat { isIPad ? 360 : 200 }
-    private var welcomeTitleSize: CGFloat { isIPad ? 64 : 36 }
-    private var welcomeDescSize: CGFloat { isIPad ? 30 : 18 }
-    private var disclaimerIconSize: CGFloat { isIPad ? 32 : 20 }
-    private var disclaimerTextSize: CGFloat { isIPad ? 20 : 13 }
-    private var checkboxSize: CGFloat { isIPad ? 36 : 24 }
-    private var checkboxTextSize: CGFloat { isIPad ? 22 : 15 }
-    private var buttonHeight: CGFloat { isIPad ? 90 : 60 }
-    private var buttonTextSize: CGFloat { isIPad ? 28 : 18 }
-    private var buttonIconSize: CGFloat { isIPad ? 30 : 18 }
-    private var pawPrintSize: CGFloat { isIPad ? 60 : 40 }
+    // Screen height detection for responsive layout
+    private var availableHeight: CGFloat {
+        UIScreen.main.bounds.height
+    }
+    
+    private var isSmallScreen: Bool { availableHeight < 700 }
+    private var isMediumScreen: Bool { availableHeight >= 700 && availableHeight < 900 }
+    private var isLargeScreen: Bool { availableHeight >= 900 && availableHeight < 1200 }
+    
+    // Dynamic spacing based on screen height
+    private var dynamicSpacing: CGFloat {
+        if isIPad { return 32 }
+        switch availableHeight {
+        case ..<700: return 8  // iPhone SE
+        case 700..<900: return 12  // iPhone 14/15
+        case 900..<1200: return 16  // iPhone Pro Max
+        default: return 24
+        }
+    }
+    
+    // Responsive sizes using screen height percentages
+    private var logoSize: CGFloat {
+        if isIPad { return availableHeight * 0.20 }
+        return availableHeight * 0.15
+    }
+    
+    private var logoCircleSize: CGFloat {
+        logoSize * 1.25
+    }
+    
+    private var welcomeTitleSize: CGFloat {
+        if isIPad { return availableHeight * 0.047 }
+        return min(36, max(24, availableHeight * 0.036))
+    }
+    
+    private var welcomeDescSize: CGFloat {
+        if isIPad { return availableHeight * 0.022 }
+        return min(18, max(14, availableHeight * 0.020))
+    }
+    
+    // Compact warning box sizing (0.7-0.85rem equivalent)
+    private var disclaimerIconSize: CGFloat {
+        if isIPad { return 28 }
+        return min(18, max(14, availableHeight * 0.020))
+    }
+    
+    private var disclaimerTextSize: CGFloat {
+        if isIPad { return 18 }
+        return min(13.6, max(11, availableHeight * 0.016))
+    }
+    
+    private var disclaimerPadding: CGFloat {
+        if isIPad { return 20 }
+        return min(16, max(8, availableHeight * 0.018))
+    }
+    
+    private var checkboxSize: CGFloat {
+        if isIPad { return 36 }
+        return min(24, max(20, availableHeight * 0.028))
+    }
+    
+    private var checkboxTextSize: CGFloat {
+        if isIPad { return 22 }
+        return min(15, max(13, availableHeight * 0.018))
+    }
+    
+    private var buttonHeight: CGFloat {
+        if isIPad { return 90 }
+        return min(60, max(50, availableHeight * 0.070))
+    }
+    
+    private var buttonTextSize: CGFloat {
+        if isIPad { return 28 }
+        return min(18, max(16, availableHeight * 0.021))
+    }
+    
+    private var buttonIconSize: CGFloat {
+        if isIPad { return 30 }
+        return min(18, max(16, availableHeight * 0.021))
+    }
+    
+    private var pawPrintSize: CGFloat {
+        if isIPad { return 60 }
+        return 40
+    }
+    
     private var maxContentWidth: CGFloat { isIPad ? 800 : .infinity }
     
     var body: some View {
@@ -43,113 +116,145 @@ struct LandingView: View {
             BrandGradient()
                 .ignoresSafeArea()
             
+            // Fixed-height container - NO SCROLLING
             VStack(spacing: 0) {
-                ScrollView(showsIndicators: false) {
-                    VStack(spacing: isIPad ? Spacing.lg : Spacing.sm) {
-                        Spacer(minLength: isIPad ? 60 : 20)
-                        
-                        // Logo Section with floating paw prints
-                        ZStack {
-                            // Floating paw prints in background
-                            ForEach(0..<4) { i in
-                                Image(systemName: "pawprint.fill")
-                                    .font(.system(size: pawPrintSize))
-                                    .foregroundColor(.white.opacity(0.1))
-                                    .offset(x: CGFloat(i * (isIPad ? 60 : 40) - (isIPad ? 90 : 60)), y: CGFloat(i * (isIPad ? 45 : 30) - (isIPad ? 67 : 45)))
-                                    .rotationEffect(.degrees(Double(i * 15)))
-                            }
-                            
-                            Circle()
-                                .fill(Color.white.opacity(0.1))
-                                .frame(width: logoCircleSize, height: logoCircleSize)
-                                .blur(radius: isIPad ? 40 : 20)
-                            
-                            Image("logo")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: logoSize, height: logoSize)
-                                .shadow(color: .black.opacity(0.3), radius: isIPad ? 40 : 20, x: 0, y: 10)
-                                .scaleEffect(animateLogo ? 1.03 : 1.0)
-                                .animation(Animation.easeInOut(duration: 2.5).repeatForever(autoreverses: true), value: animateLogo)
-                        }
-                        .onAppear { animateLogo = true }
-                        .padding(.top, isIPad ? -Spacing.lg : -Spacing.md)
-                        .padding(.bottom, isIPad ? Spacing.xl : 0)
-                        
-                        // Welcome Text
-                        VStack(spacing: isIPad ? Spacing.xxl : Spacing.lg) {
-                            Text("landing.welcome".localized)
-                                .font(.system(size: welcomeTitleSize, weight: .bold, design: .rounded))
-                                .foregroundColor(.white)
-                                .multilineTextAlignment(.center)
-                                .shadow(color: .black.opacity(0.3), radius: isIPad ? 8 : 4, x: 0, y: 2)
-                                .padding(.horizontal, isIPad ? Spacing.xxxl : Spacing.xl)
-                                .padding(.bottom, isIPad ? Spacing.md : 0)
-                                .id(localizationManager.currentLanguage)
-                            
-                            Text("landing.welcomeDesc".localized)
-                                .font(.system(size: welcomeDescSize, weight: .medium))
-                                .foregroundColor(.white.opacity(0.95))
-                                .multilineTextAlignment(.center)
-                                .padding(.horizontal, isIPad ? Spacing.xxxl : Spacing.xl)
-                                .lineSpacing(isIPad ? 10 : 5)
-                                .shadow(color: .black.opacity(0.2), radius: isIPad ? 4 : 2, x: 0, y: 1)
-                                .id(localizationManager.currentLanguage)
-                        }
-                        .padding(.bottom, isIPad ? Spacing.xl : Spacing.md)
-                        
-                        // Legal Section Card
-                        VStack(spacing: isIPad ? Spacing.xl : Spacing.lg) {
-                            // Medical Disclaimer Box
-                            HStack(alignment: .top, spacing: isIPad ? Spacing.xl : Spacing.md) {
-                                Image(systemName: "exclamationmark.shield.fill")
-                                    .font(.system(size: disclaimerIconSize))
-                                    .foregroundColor(Color(red: 1.0, green: 0.75, blue: 0.0)) // Dunkleres Gelb
-                                    .padding(.top, isIPad ? 4 : 2)
-                                
-                                Text("disclaimer.medicalText".localized)
-                                    .font(.system(size: disclaimerTextSize, weight: .medium))
-                                    .foregroundColor(.white.opacity(0.95))
-                                    .multilineTextAlignment(.leading)
-                                    .fixedSize(horizontal: false, vertical: true)
-                                    .id(localizationManager.currentLanguage)
-                            }
-                            .padding(isIPad ? Spacing.xxl : Spacing.lg)
-                            .background(Color.white.opacity(0.15))
-                            .cornerRadius(isIPad ? CornerRadius.large : CornerRadius.medium)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: isIPad ? CornerRadius.large : CornerRadius.medium)
-                                    .stroke(Color.white.opacity(0.25), lineWidth: isIPad ? 2.5 : 1.5)
-                            )
-                            .shadow(color: .black.opacity(0.2), radius: isIPad ? 16 : 8, x: 0, y: 4)
-                            
-                            // Consent Checkboxes
-                            VStack(alignment: .leading, spacing: isIPad ? Spacing.lg : Spacing.md) {
-                                consentRow(
-                                    isActive: acceptedTerms,
-                                    textKey: "landing.acceptTerms",
-                                    linkKey: "landing.terms",
-                                    action: { acceptedTerms.toggle() },
-                                    linkAction: { showTerms = true }
+                Spacer(minLength: dynamicSpacing * 0.5)
+                
+                // Logo Section with conditional decorative elements
+                ZStack {
+                    // Floating paw prints - hidden on small screens
+                    if !isSmallScreen {
+                        ForEach(0..<4) { i in
+                            Image(systemName: "pawprint.fill")
+                                .font(.system(size: pawPrintSize))
+                                .foregroundColor(.white.opacity(0.1))
+                                .offset(
+                                    x: CGFloat(i * (isIPad ? 60 : 40) - (isIPad ? 90 : 60)),
+                                    y: CGFloat(i * (isIPad ? 45 : 30) - (isIPad ? 67 : 45))
                                 )
-                                
-                                consentRow(
-                                    isActive: acceptedPrivacy,
-                                    textKey: "landing.acceptPrivacy",
-                                    linkKey: "landing.privacyPolicy",
-                                    action: { acceptedPrivacy.toggle() },
-                                    linkAction: { showPrivacy = true }
-                                )
-                            }
-                            .padding(.top, isIPad ? Spacing.md : Spacing.sm)
+                                .rotationEffect(.degrees(Double(i * 15)))
                         }
+                    }
+                    
+                    // Reduced glow on small screens
+                    Circle()
+                        .fill(Color.white.opacity(isSmallScreen ? 0.05 : 0.1))
+                        .frame(width: logoCircleSize, height: logoCircleSize)
+                        .blur(radius: isSmallScreen ? 10 : (isIPad ? 40 : 20))
+                    
+                    Image("logo")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: logoSize, height: logoSize)
+                        .shadow(
+                            color: .black.opacity(isSmallScreen ? 0.2 : 0.3),
+                            radius: isSmallScreen ? 10 : (isIPad ? 40 : 20),
+                            x: 0,
+                            y: isSmallScreen ? 5 : 10
+                        )
+                        .scaleEffect(animateLogo ? 1.03 : 1.0)
+                        .animation(
+                            Animation.easeInOut(duration: 2.5).repeatForever(autoreverses: true),
+                            value: animateLogo
+                        )
+                }
+                .onAppear { animateLogo = true }
+                
+                Spacer(minLength: dynamicSpacing * 0.8)
+                
+                // Welcome Text - Compact
+                VStack(spacing: dynamicSpacing * 0.5) {
+                    Text("landing.welcome".localized)
+                        .font(.system(size: welcomeTitleSize, weight: .bold, design: .rounded))
+                        .foregroundColor(.white)
+                        .multilineTextAlignment(.center)
+                        .lineLimit(2)
+                        .minimumScaleFactor(0.8)
+                        .shadow(
+                            color: .black.opacity(0.3),
+                            radius: isSmallScreen ? 2 : 4,
+                            x: 0,
+                            y: 2
+                        )
                         .padding(.horizontal, isIPad ? Spacing.xxxl : Spacing.xl)
-                        .frame(maxWidth: maxContentWidth)
-                        .frame(maxWidth: .infinity)
+                        .id(localizationManager.currentLanguage)
+                    
+                    Text("landing.welcomeDesc".localized)
+                        .font(.system(size: welcomeDescSize, weight: .medium))
+                        .foregroundColor(.white.opacity(0.95))
+                        .multilineTextAlignment(.center)
+                        .lineLimit(2)
+                        .minimumScaleFactor(0.85)
+                        .padding(.horizontal, isIPad ? Spacing.xxxl : Spacing.xl)
+                        .lineSpacing(isSmallScreen ? 2 : 5)
+                        .shadow(
+                            color: .black.opacity(0.2),
+                            radius: isSmallScreen ? 1 : 2,
+                            x: 0,
+                            y: 1
+                        )
+                        .id(localizationManager.currentLanguage)
+                }
+                
+                Spacer(minLength: dynamicSpacing)
+                
+                // Legal Section - Compact
+                VStack(spacing: dynamicSpacing) {
+                    // Compact Medical Disclaimer Box
+                    HStack(alignment: .top, spacing: dynamicSpacing * 0.8) {
+                        Image(systemName: "exclamationmark.shield.fill")
+                            .font(.system(size: disclaimerIconSize))
+                            .foregroundColor(Color(red: 1.0, green: 0.75, blue: 0.0))
+                            .padding(.top, 2)
                         
-                        Spacer(minLength: isIPad ? 60 : 40)
+                        Text("disclaimer.medicalText".localized)
+                            .font(.system(size: disclaimerTextSize, weight: .medium))
+                            .foregroundColor(.white.opacity(0.95))
+                            .multilineTextAlignment(.leading)
+                            .lineLimit(isSmallScreen ? 6 : nil)
+                            .minimumScaleFactor(0.9)
+                            .lineSpacing(isSmallScreen ? 1 : 2)
+                            .fixedSize(horizontal: false, vertical: true)
+                            .id(localizationManager.currentLanguage)
+                    }
+                    .padding(disclaimerPadding)
+                    .background(Color.white.opacity(0.15))
+                    .cornerRadius(isIPad ? CornerRadius.large : CornerRadius.medium)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: isIPad ? CornerRadius.large : CornerRadius.medium)
+                            .stroke(Color.white.opacity(0.25), lineWidth: isIPad ? 2.5 : 1.5)
+                    )
+                    .shadow(
+                        color: .black.opacity(0.2),
+                        radius: isSmallScreen ? 4 : 8,
+                        x: 0,
+                        y: 4
+                    )
+                    
+                    // Compact Consent Checkboxes
+                    VStack(alignment: .leading, spacing: dynamicSpacing * 0.8) {
+                        consentRow(
+                            isActive: acceptedTerms,
+                            textKey: "landing.acceptTerms",
+                            linkKey: "landing.terms",
+                            action: { acceptedTerms.toggle() },
+                            linkAction: { showTerms = true }
+                        )
+                        
+                        consentRow(
+                            isActive: acceptedPrivacy,
+                            textKey: "landing.acceptPrivacy",
+                            linkKey: "landing.privacyPolicy",
+                            action: { acceptedPrivacy.toggle() },
+                            linkAction: { showPrivacy = true }
+                        )
                     }
                 }
+                .padding(.horizontal, isIPad ? Spacing.xxxl : Spacing.xl)
+                .frame(maxWidth: maxContentWidth)
+                .frame(maxWidth: .infinity)
+                
+                Spacer(minLength: dynamicSpacing)
                 
                 // Bottom Button Section (Fixed at bottom)
                 VStack {
@@ -160,15 +265,6 @@ struct LandingView: View {
                         UserDefaults.standard.set(true, forKey: "hasAcceptedTerms")
                         UserDefaults.standard.set(true, forKey: "hasAcceptedPrivacy")
                         UserDefaults.standard.synchronize()
-                        
-                        // Error Handling: Prüfe ob Speicherung erfolgreich war
-                        guard UserDefaults.standard.bool(forKey: "hasAcceptedTerms") &&
-                              UserDefaults.standard.bool(forKey: "hasAcceptedPrivacy") else {
-                            // Fehler beim Speichern - zeige Fehler (sollte nicht passieren)
-                            print("⚠️ Fehler beim Speichern der Zustimmung")
-                            return
-                        }
-                        
                         withAnimation(.spring(response: 0.5, dampingFraction: 0.8)) {
                             hasSeenOnboarding = true
                         }
@@ -199,13 +295,18 @@ struct LandingView: View {
                                 )
                         )
                         .cornerRadius(isIPad ? CornerRadius.xlarge : CornerRadius.large)
-                        .shadow(color: (!acceptedTerms || !acceptedPrivacy) ? Color.clear : Color.black.opacity(0.3), radius: isIPad ? 20 : 12, x: 0, y: 6)
+                        .shadow(
+                            color: (!acceptedTerms || !acceptedPrivacy) ? Color.clear : Color.black.opacity(0.3),
+                            radius: isIPad ? 20 : 12,
+                            x: 0,
+                            y: 6
+                        )
                     }
                     .disabled(!acceptedTerms || !acceptedPrivacy)
                     .buttonStyle(ScaleButtonStyle())
                     .padding(.horizontal, isIPad ? Spacing.xxxl : Spacing.xl)
-                    .padding(.top, isIPad ? Spacing.xxl : Spacing.lg)
-                    .padding(.bottom, isIPad ? Spacing.xxxl : Spacing.xxl)
+                    .padding(.top, dynamicSpacing)
+                    .padding(.bottom, isIPad ? Spacing.xxxl : Spacing.xl)
                     .frame(maxWidth: maxContentWidth)
                     .frame(maxWidth: .infinity)
                 }
@@ -218,6 +319,7 @@ struct LandingView: View {
                     .ignoresSafeArea()
                 )
             }
+            .frame(maxHeight: .infinity)
         }
         .sheet(isPresented: $showTerms) {
             TermsOfServiceView()

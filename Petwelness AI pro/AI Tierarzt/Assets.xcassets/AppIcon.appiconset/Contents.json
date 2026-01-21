@@ -1,7 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "PetWellness AI App Icon.png",
+      "filename" : "Pet Healthcare iOS App Icon - ECG Added 1.png",
       "idiom" : "universal",
       "platform" : "ios",
       "size" : "1024x1024"
@@ -13,7 +13,7 @@
           "value" : "dark"
         }
       ],
-      "filename" : "PetWellness AI App Icon 1.png",
+      "filename" : "Pet Healthcare iOS App Icon - ECG Added.png",
       "idiom" : "universal",
       "platform" : "ios",
       "size" : "1024x1024"
@@ -25,7 +25,7 @@
           "value" : "tinted"
         }
       ],
-      "filename" : "PetWellness AI App Icon 2.png",
+      "filename" : "Pet Healthcare iOS App Icon - ECG Added 2.png",
       "idiom" : "universal",
       "platform" : "ios",
       "size" : "1024x1024"

@@ -23,6 +23,8 @@ struct ChatView: View {
     @State private var showCitations = false
     @State private var errorMessage: String? = nil
     @State private var showError = false
+    @State private var isAtBottom = true
+    @State private var suggestedQuestions: [SuggestedQuestion] = []
     @StateObject private var chatViewModel = ChatViewModel()
     
     var initialSymptoms: [String] = []
@@ -73,21 +75,11 @@ struct ChatView: View {
                             .frame(width: 16)
                     }
                     
-                    ZStack {
-                        Circle()
-                            .fill(
-                                LinearGradient(
-                                    colors: [Color(red: 0.6, green: 0.4, blue: 0.9), Color(red: 0.2, green: 0.8, blue: 0.8)],
-                                    startPoint: .topLeading,
-                                    endPoint: .bottomTrailing
-                                )
-                            )
-                            .frame(width: isIPad ? 50 : 36, height: isIPad ? 50 : 36)
-                        
-                        Text("AI")
-                            .font(.system(size: isIPad ? 20 : 14, weight: .bold))
-                            .foregroundColor(.white)
-                    }
+                    Image("Tierarzt App Icon Flat")
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: isIPad ? 50 : 36, height: isIPad ? 50 : 36)
+                        .clipShape(Circle())
                     
                     VStack(alignment: .leading, spacing: isIPad ? 3 : 1) {
                         Text("chat.aiVet".localized)
@@ -150,69 +142,123 @@ struct ChatView: View {
                 medicalDisclaimerBanner
                 
                 // Messages Area
-                ScrollViewReader { proxy in
-                    ScrollView {
-                        LazyVStack(spacing: Spacing.sm) {
-                            if messages.isEmpty {
-                                VStack(spacing: Spacing.xl) {
-                                    welcomeMessage
-                                    suggestedQuestionsView
+                GeometryReader { geometry in
+                    ScrollViewReader { proxy in
+                        ScrollView {
+                            // Container für den Inhalt - füllt mindestens den Bildschirm
+                            ZStack {
+                                if messages.isEmpty {
+                                    // Zentrierter Inhalt für leeren Zustand
+                                    VStack(spacing: Spacing.lg) {
+                                        Spacer()
+                                        welcomeMessage
+                                        suggestedQuestionsView
+                                        Spacer()
+                                        Spacer() // Etwas mehr Platz unten für visuelle Balance
+                                    }
+                                    .frame(minHeight: geometry.size.height)
+                                } else {
+                                    // Nachrichten-Liste
+                                    LazyVStack(spacing: Spacing.sm) {
+                                        // Top anchor for scrolling to top
+                                        Color.clear
+                                            .frame(height: 1)
+                                            .id("top-anchor")
+                                            
+                                        ForEach(messages) { message in
+                                            ChatBubble(message: message)
+                                                .id(message.id)
+                                                .transition(.asymmetric(
+                                                    insertion: .scale(scale: 0.9).combined(with: .opacity),
+                                                    removal: .opacity
+                                                ))
+                                        }
+                                        
+                                        if isTyping {
+                                            TypingIndicator()
+                                                .id("typing")
+                                                .padding(.leading, Spacing.lg)
+                                                .padding(.top, 6)
+                                                .padding(.bottom, 6)
+                                        }
+                                        
+                                        if isLoading {
+                                            HStack(alignment: .top) {
+                                                ProgressView()
+                                                    .padding(.trailing, Spacing.sm)
+                                                Text("KI denkt nach...")
+                                                    .font(.bodyText)
+                                                    .foregroundColor(.textSecondary)
+                                            }
+                                            .frame(maxWidth: .infinity, alignment: .leading)
+                                            .padding(.leading, Spacing.lg)
+                                            .padding(.top, 6)
+                                            .padding(.bottom, 6)
+                                        }
+                                        
+                                        // Scroll detection view at the very bottom
+                                        Color.clear
+                                            .frame(height: 1)
+                                            .id("bottom-anchor")
+                                            .onAppear {
+                                                withAnimation {
+                                                    isAtBottom = true
+                                                }
+                                            }
+                                            .onDisappear {
+                                                withAnimation {
+                                                    isAtBottom = false
+                                                }
+                                            }
+                                    }
+                                    .padding(.top, Spacing.lg)
+                                    .padding(.bottom, bottomPadding)
                                 }
-                                .padding(.top, Spacing.xl)
                             }
-                            
-                            ForEach(messages) { message in
-                                ChatBubble(message: message)
-                                    .id(message.id)
-                                    .transition(.asymmetric(
-                                        insertion: .scale(scale: 0.9).combined(with: .opacity),
-                                        removal: .opacity
-                                    ))
+                            .contentShape(Rectangle())
+                            .onTapGesture {
+                                hideKeyboard()
                             }
-                            
+                        }
+                        .overlay(alignment: .bottomTrailing) {
+                            if !messages.isEmpty {
+                                Button(action: {
+                                    withAnimation {
+                                        if isAtBottom {
+                                            proxy.scrollTo("top-anchor", anchor: .top)
+                                        } else {
+                                            proxy.scrollTo("bottom-anchor", anchor: .bottom)
+                                        }
+                                    }
+                                }) {
+                                    Image(systemName: isAtBottom ? "arrow.up" : "arrow.down")
+                                        .font(.system(size: 20, weight: .bold))
+                                        .foregroundColor(.white)
+                                        .frame(width: 40, height: 40)
+                                        .background(Color(red: 0.2, green: 0.8, blue: 0.8)) // Teal to match other buttons
+                                        .clipShape(Circle())
+                                        .shadow(color: Color.black.opacity(0.15), radius: 3, x: 0, y: 3)
+                                }
+                                .padding(.trailing, Spacing.lg)
+                                .padding(.bottom, Spacing.md)
+                                .transition(.opacity.combined(with: .scale))
+                            }
+                        }
+                        .onChange(of: messages.count) { _ in
+                            if let lastMessage = messages.last {
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                                    withAnimation(.easeOut(duration: 0.3)) {
+                                        proxy.scrollTo(lastMessage.id, anchor: .bottom)
+                                    }
+                                }
+                            }
+                        }
+                        .onChange(of: isTyping) { _ in
                             if isTyping {
-                                TypingIndicator()
-                                    .id("typing")
-                                    .padding(.leading, Spacing.lg)
-                                    .padding(.top, 6)
-                                    .padding(.bottom, 6)
-                            }
-                            
-                            if isLoading {
-                                HStack(alignment: .top) {
-                                    ProgressView()
-                                        .padding(.trailing, Spacing.sm)
-                                    Text("KI denkt nach...")
-                                        .font(.bodyText)
-                                        .foregroundColor(.textSecondary)
-                                }
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                                .padding(.leading, Spacing.lg)
-                                .padding(.top, 6)
-                                .padding(.bottom, 6)
-                            }
-                        }
-                        .padding(.top, Spacing.lg)
-                        .padding(.bottom, bottomPadding)
-                        .contentShape(Rectangle())
-                        .onTapGesture {
-                            hideKeyboard()
-                        }
-                    }
-                    .onChange(of: messages.count) { _ in
-                        if let lastMessage = messages.last {
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                                withAnimation(.easeOut(duration: 0.3)) {
-                                    proxy.scrollTo(lastMessage.id, anchor: .bottom)
-                                }
-                            }
-                        }
-                    }
-                    .onChange(of: isTyping) { _ in
-                        if isTyping {
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-                                withAnimation(.easeOut(duration: 0.3)) {
-                                    proxy.scrollTo("typing", anchor: .bottom)
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                                    withAnimation(.easeOut(duration: 0.3)) {
+                                        proxy.scrollTo("typing", anchor: .bottom)
+                                    }
                                 }
                             }
                         }
@@ -249,6 +295,11 @@ struct ChatView: View {
         }
         .onAppear {
             loadChatHistory()
+            
+            // Laden der dynamischen Fragen wenn noch keine geladen sind
+            if suggestedQuestions.isEmpty {
+                suggestedQuestions = SuggestedQuestionManager.shared.getRandomQuestions()
+            }
             
             // Navigation Bar in ContentView anzeigen (ist jetzt in ContentView)
             withAnimation(.easeInOut(duration: 0.2)) {
@@ -414,7 +465,7 @@ struct ChatView: View {
     }
     
     private var welcomeMessage: some View {
-        VStack(spacing: Spacing.xl) {
+        VStack(spacing: Spacing.md) {
             ZStack {
                 Circle()
                     .fill(
@@ -427,28 +478,27 @@ struct ChatView: View {
                             endPoint: .bottomTrailing
                         )
                     )
-                    .frame(width: 120, height: 120)
+                    .frame(width: 80, height: 80)
                 
                 Image(systemName: "message.fill")
-                    .font(.system(size: 50))
+                    .font(.system(size: 32))
                     .foregroundColor(Color(red: 0.6, green: 0.4, blue: 0.9))
             }
             
-            VStack(spacing: Spacing.sm) {
+            VStack(spacing: 4) {
                 Text("chat.askFirstQuestion".localized)
-                    .font(.system(size: 20, weight: .semibold))
+                    .font(.system(size: 18, weight: .semibold))
                     .foregroundColor(.textPrimary)
                 
                 Text("chat.helpDescription".localized)
-                    .font(.system(size: 15))
+                    .font(.system(size: 14))
                     .foregroundColor(.textSecondary)
                     .multilineTextAlignment(.center)
-                    .padding(.horizontal, Spacing.xxl)
-                    .lineSpacing(4)
+                    .padding(.horizontal, Spacing.xl)
             }
         }
         .frame(maxWidth: .infinity)
-        .padding(.vertical, Spacing.xl)
+        .padding(.vertical, Spacing.md)
     }
     
     private var suggestedQuestionsView: some View {
@@ -459,25 +509,13 @@ struct ChatView: View {
                 .padding(.horizontal, Spacing.lg)
             
             VStack(spacing: Spacing.sm) {
-                SuggestedQuestionButton(
-                    question: "chat.question1".localized,
-                    icon: "heart.text.square.fill"
-                ) {
-                    appState.chatInputText = "chat.question1".localized
-                }
-                
-                SuggestedQuestionButton(
-                    question: "chat.question2".localized,
-                    icon: "exclamationmark.triangle.fill"
-                ) {
-                    appState.chatInputText = "chat.question2".localized
-                }
-                
-                SuggestedQuestionButton(
-                    question: "chat.question3".localized,
-                    icon: "chart.line.uptrend.xyaxis"
-                ) {
-                    appState.chatInputText = "chat.question3".localized
+                ForEach(suggestedQuestions) { question in
+                    SuggestedQuestionButton(
+                        question: question.text,
+                        icon: question.icon
+                    ) {
+                        appState.chatInputText = question.text
+                    }
                 }
             }
             .padding(.horizontal, Spacing.lg)
@@ -832,22 +870,12 @@ struct ChatBubble: View {
             if message.isUser {
                 Spacer(minLength: isIPad ? 100 : 60)
             } else {
-                ZStack {
-                    Circle()
-                        .fill(
-                            LinearGradient(
-                                colors: [Color(red: 0.6, green: 0.4, blue: 0.9), Color(red: 0.2, green: 0.8, blue: 0.8)],
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
-                            )
-                        )
-                        .frame(width: isIPad ? 40 : 32, height: isIPad ? 40 : 32)
-                    
-                    Text("AI")
-                        .font(.system(size: isIPad ? 14 : 12, weight: .bold))
-                        .foregroundColor(.white)
-                }
-                .padding(.leading, isIPad ? Spacing.xl : Spacing.lg)
+                Image("Tierarzt App Icon Flat")
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: isIPad ? 40 : 32, height: isIPad ? 40 : 32)
+                    .clipShape(Circle())
+                    .padding(.leading, isIPad ? Spacing.xl : Spacing.lg)
             }
             
             VStack(alignment: message.isUser ? .trailing : .leading, spacing: 4) {
